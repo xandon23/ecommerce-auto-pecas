@@ -17,7 +17,7 @@
         }
 
         public function index($id) {
-            require "../views/produto/index.php";
+            require "../view/produto/index.php";
         }
 
         public function salvar() {
@@ -53,7 +53,7 @@
         }
 
         public function listar() {
-            require "../views/produto/listar.php";
+            require "../view/produto/listar.php";
         }
 
         public function excluir($id) {
