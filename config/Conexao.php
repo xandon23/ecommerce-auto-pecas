@@ -2,7 +2,7 @@
 class Conexao {
     private static $host = "localhost";
     private static $user = "root";
-    private static $db   = "ecommerce-projeto";
+    private static $db   = "ecommerce_projeto";
     private static $pass = "";
     private static $pdo  = null; // conexão única (singleton)
 

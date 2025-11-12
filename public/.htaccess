@@ -1,6 +1,19 @@
-RewriteEngine On
+<IfModule mod_rewrite.c>
+    RewriteEngine On
 
-# Redireciona tudo que NÃO for arquivo ou pasta existente para index.php
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php [QSA,L]
+    # 1. CORREÇÃO DA PASTA (BASE_URL)
+    # O seu URL (imagem 49221f) mostra que a pasta é 'ecommerce-auto-pecas'
+    RewriteBase /ecommerce-auto-pecas/public/
+
+    # 2. CORREÇÃO DA REGRA (para funcionar com o seu Roteador)
+    
+    # Redireciona tudo que NÃO for um ficheiro real
+    RewriteCond %{REQUEST_FILENAME} !-f
+    # Redireciona tudo que NÃO for uma pasta real
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # Esta regra envia 'home' para 'index.php?url=home'
+    # O seu roteador (imagem 48505d) está à espera de $_GET['url']
+    RewriteRule ^(.*)$ index.php?url=$1 [L,QSA]
+
+</IfModule>
