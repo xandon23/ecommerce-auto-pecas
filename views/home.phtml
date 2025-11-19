@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -168,7 +169,8 @@
       font-weight: 600;
     }
 
-    footer p, footer li {
+    footer p,
+    footer li {
       font-size: 0.95rem;
     }
 
@@ -196,9 +198,14 @@
     <div class="container d-flex justify-content-between">
       <div>🛠️ Peças e ferramentas com entrega para todo o Brasil</div>
       <div>
-        <a href="<?= BASE_URL ?>/?url=historia">Quem Somos</a>
-        <a href="/user/login"><i class="bi bi-person"></i> Entrar</a>
-        <a href="/venda/listar"><i class="bi bi-receipt"></i> Meus pedidos</a>
+        <a href="<?= BASE_URL ?>/historia">Quem Somos</a>
+        <?php if (isset($_SESSION['usuario'])): ?>
+          <span>Olá, <?= $_SESSION['usuario']['nome'] ?></span>
+          <a href="<?= BASE_URL ?>/index/sair" class="bi bi-box-arrow-right"> Sair</a>
+          <a href="/venda/listar"><i class="bi bi-receipt"></i> Meus pedidos</a>
+        <?php else: ?>
+          <a href="<?= BASE_URL ?>/index" class="bi bi-person"> Entrar</a>
+        <?php endif; ?>
       </div>
     </div>
   </div>
@@ -275,7 +282,7 @@
 
     <div class="row g-3">
       <?php
-      foreach($produtos as $p): ?>
+      foreach ($produtos as $p): ?>
         <div class="col-6 col-md-4 col-lg-3">
           <div class="card card-product h-100 shadow-sm border-0">
             <img class="thumb card-img-top" src="<?= htmlspecialchars($p['img']) ?>" alt="<?= htmlspecialchars($p['nome']) ?>">
@@ -284,17 +291,17 @@
                 <?= htmlspecialchars($p['nome']) ?>
               </h6>
               <div class="mb-2">
-                <?php if(!empty($p['preco_old'])): ?>
-                  <div class="price-old">R$ <?= number_format($p['preco_old'],2,',','.') ?></div>
+                <?php if (!empty($p['preco_old'])): ?>
+                  <div class="price-old">R$ <?= number_format($p['preco_old'], 2, ',', '.') ?></div>
                 <?php endif; ?>
-                <div class="price h5">R$ <?= number_format($p['preco'],2,',','.') ?></div>
+                <div class="price h5">R$ <?= number_format($p['preco'], 2, ',', '.') ?></div>
                 <div class="text-muted small">em até 10x sem juros</div>
               </div>
               <div class="mt-auto d-grid gap-2">
-                <a href="/p/<?= urlencode($p['slug']) ?>" class="btn btn-outline-secondary btn-sm">
+                <a href="<?= BASE_URL ?>/produto/index/<?= $p['slug'] ?>" class="btn btn-outline-secondary btn-sm">
                   <i class="bi bi-eye"></i> Ver
                 </a>
-                <a href="/cart/add/<?= urlencode($p['slug']) ?>" class="btn btn-brand btn-sm">
+                <a href="<?= BASE_URL ?>/carrinho/adicionar/<?= $p['slug'] ?>" class="btn btn-brand btn-sm">
                   <i class="bi bi-cart-plus"></i> Adicionar
                 </a>
               </div>
@@ -308,10 +315,26 @@
   <!-- Blocos de confiança -->
   <section class="container my-5">
     <div class="row g-3">
-      <div class="col-md-3"><div class="trust-box"><i class="bi bi-truck fs-3"></i><p>Entrega para todo o Brasil</p></div></div>
-      <div class="col-md-3"><div class="trust-box"><i class="bi bi-shield-check fs-3"></i><p>Compra segura</p></div></div>
-      <div class="col-md-3"><div class="trust-box"><i class="bi bi-arrow-repeat fs-3"></i><p>Troca garantida</p></div></div>
-      <div class="col-md-3"><div class="trust-box"><i class="bi bi-credit-card fs-3"></i><p>Pix e cartão</p></div></div>
+      <div class="col-md-3">
+        <div class="trust-box"><i class="bi bi-truck fs-3"></i>
+          <p>Entrega para todo o Brasil</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="trust-box"><i class="bi bi-shield-check fs-3"></i>
+          <p>Compra segura</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="trust-box"><i class="bi bi-arrow-repeat fs-3"></i>
+          <p>Troca garantida</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="trust-box"><i class="bi bi-credit-card fs-3"></i>
+          <p>Pix e cartão</p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -344,4 +367,5 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

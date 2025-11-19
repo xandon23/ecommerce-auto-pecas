@@ -16,9 +16,29 @@ class ProdutoController
 
     public function index($id)
     {
-        // Apenas renderize. O 'views' (minúsculo) já está 
-        // configurado no index.php (Passo 2)
-        render('produto/index', ['id' => $id, 'titulo' => 'Ver Produto']);
+        // Busca os dados do produto pelo ID
+        $dadosProduto = $this->produto->getDado($id);
+
+        // Se não achar o produto, redireciona ou mostra erro
+        if (!$dadosProduto) {
+            header('Location: ' . BASE_URL . '/home');
+            exit;
+        }
+
+        // Tratamento da imagem para a View de detalhes
+        $imgWeb = BASE_URL . "/img/produtos/{$id}.jpg";
+        $imgPath = BASE_PATH . "/public/img/produtos/{$id}.jpg";
+        if (!file_exists($imgPath)) {
+            $imgWeb = BASE_URL . "/img/placeholder.jpg";
+        }
+        // Adiciona a propriedade 'img' ao objeto para a view usar
+        $dadosProduto->img = $imgWeb;
+
+        // Renderiza a view 'views/produto/index.phtml'
+        render('produto/index', [
+            'titulo' => $dadosProduto->nome,
+            'produto' => $dadosProduto
+        ]);
     }
 
     public function salvar()
@@ -55,11 +75,26 @@ class ProdutoController
 
     public function listar()
     {
-        $listaDeProdutos = $this->produto->listar();
+        // Busca todos os produtos
+        $lista = $this->produto->listar();
+        
+        // Processa as imagens para cada produto da lista
+        foreach ($lista as $k => $item) {
+            $id = $item->id; // ou $item->id_produto dependendo do seu Model
+            
+            $imgWeb = BASE_URL . "/img/produtos/{$id}.jpg";
+            $imgPath = BASE_PATH . "/public/img/produtos/{$id}.jpg";
+            
+            if (!file_exists($imgPath)) {
+                $imgWeb = BASE_URL . "/img/placeholder.jpg";
+            }
+            $lista[$k]->img = $imgWeb;
+        }
 
+        // Renderiza a view 'views/produto/listar.phtml'
         render('produto/listar', [
-            'titulo' => 'Lista de Produtos',
-            'produtos' => $listaDeProdutos
+            'titulo' => 'Todos os Produtos',
+            'produtos' => $lista
         ]);
     }
 
