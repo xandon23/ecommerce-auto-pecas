@@ -9,7 +9,7 @@
         }
 
         public function getEmailUsuario($email) {
-            $sql = "SELECT id_usuario, nome, email, senha FROM usuario WHERE email = :email LIMIT 1";
+            $sql = "SELECT id_usuario, nome, email, senha, tipo_usuario FROM usuario WHERE email = :email LIMIT 1";
             $consulta = $this->pdo->prepare($sql);
             $consulta->bindParam(":email", $email);
             $consulta->execute();

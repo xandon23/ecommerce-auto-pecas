@@ -28,7 +28,7 @@
         }
 
         public function listar() {
-            $sql = "select * from categoria order by nome";
+            $sql = "select * from categorias order by nome";
             $consulta = $this->pdo->prepare($sql);
             $consulta->execute();
 
@@ -36,7 +36,7 @@
         }
 
         public function getDados($id) {
-            $sql = "select * from categoria where id = :id limit 1";
+            $sql = "select * from categorias where id = :id limit 1";
             $consulta = $this->pdo->prepare($sql);
             $consulta->bindParam(":id", $id);
             $consulta->execute();
@@ -45,7 +45,7 @@
         }
 
         public function excluir($id) {
-            $sql = "delete from categoria where id = :id limit 1";
+            $sql = "delete from categorias where id = :id limit 1";
             $consulta = $this->pdo->prepare($sql);
             $consulta->bindParam(":id", $id);
 

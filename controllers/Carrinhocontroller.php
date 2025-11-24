@@ -1,7 +1,9 @@
 <?php
-class CarrinhoController {
+class CarrinhoController
+{
 
-    public function adicionar($slug) {
+    public function adicionar($slug)
+    {
         $pdo = Conexao::getInstance();
         $produtoModel = new Produto($pdo);
 
@@ -38,15 +40,48 @@ class CarrinhoController {
         header("Location: " . BASE_URL . "/carrinho");
     }
 
-    public function index() {
+    public function index()
+    {
         $itens = $_SESSION['carrinho'] ?? [];
         render('carrinho/index', compact('itens'));
     }
 
-    public function remover($id) {
+    public function remover($id)
+    {
         if (isset($_SESSION['carrinho'][$id])) {
             unset($_SESSION['carrinho'][$id]);
         }
         header("Location: " . BASE_URL . "/carrinho");
+    }
+
+    public function finalizar() {
+        // 1. Segurança: Só pode finalizar se estiver logado
+        if (!isset($_SESSION['usuario'])) {
+            // Manda para o login com aviso
+            echo "<script>alert('Faça login para finalizar a compra.'); location.href='".BASE_URL."/index';</script>";
+            exit;
+        }
+
+        // 2. Pega os itens
+        $itensCarrinho = $_SESSION['carrinho'] ?? [];
+
+        // 3. Se carrinho vazio, volta
+        if (empty($itensCarrinho)) {
+            header('Location: ' . BASE_URL . '/carrinho');
+            exit;
+        }
+
+        // 4. Calcula Total
+        $total = 0;
+        foreach ($itensCarrinho as $item) {
+            $total += ($item['preco'] * $item['qtd']);
+        }
+
+        // 5. Renderiza a View correta (sem lógica, só HTML)
+        render('carrinho/finalizar', [
+            'titulo' => 'Finalizar Pedido',
+            'itens' => $itensCarrinho,
+            'total' => $total
+        ]);
     }
 }

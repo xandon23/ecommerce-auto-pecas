@@ -43,7 +43,8 @@ class IndexController
             
             $_SESSION["usuario"] = array(
                 "id" => $dadosUsuario->id_usuario,
-                "nome" => $dadosUsuario->nome
+                "nome" => $dadosUsuario->nome,
+                "tipo" => $dadosUsuario->tipo_usuario
             );
 
             // 1. Pega o carrinho que o usuário montou AGORA (como visitante)

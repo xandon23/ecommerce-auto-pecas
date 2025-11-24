@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <title><?= $titulo ?></title>
+</head>
+<body class="bg-light">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-secondary">Dashboard de Gestão</h2>
+        <a href="<?= BASE_URL ?>/home" class="btn btn-outline-secondary">Voltar ao Site</a>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="card text-white bg-success h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Total Vendido</h5>
+                    <p class="card-text display-6">R$ <?= number_format($vendas, 2, ',', '.') ?></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-primary h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Produtos Cadastrados</h5>
+                    <p class="card-text display-6"><?= $produtos ?></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-info h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Clientes</h5>
+                    <p class="card-text display-6"><?= $clientes ?></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-danger h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Estoque Baixo</h5>
+                    <p class="card-text display-6"><?= $stock_baixo ?></p>
+                    <small>Produtos com menos de 50 un.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white fw-bold">
+                    Panorama do Estoque vs Vendas
+                </div>
+                <div class="card-body">
+                    <canvas id="meuGrafico"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const ctx = document.getElementById('meuGrafico');
+
+    new Chart(ctx, {
+        type: 'bar', // Tipo de gráfico: barras
+        data: {
+            labels: ['Produtos Totais', 'Clientes Cadastrados', 'Alertas de Estoque'],
+            datasets: [{
+                label: 'Quantidade',
+                data: [<?= $produtos ?>, <?= $clientes ?>, <?= $stock_baixo ?>],
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.6)', // Azul
+                    'rgba(75, 192, 192, 0.6)', // Verde
+                    'rgba(255, 99, 132, 0.6)'  // Vermelho
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

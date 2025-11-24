@@ -23,13 +23,22 @@ class HomeController {
             // ID (id_produto AS id)
             $id = (int)$r->id;
 
-            // Caminho físico do arquivo
-            $imgPath = BASE_PATH . "/public/img/produtos/{$id}.jpg";
+            $nomeArquivo = null;
 
-            // Caminho público (URL)
-            $imgWeb  = BASE_URL . "/img/produtos/{$id}.jpg";
+            // 1. Prioridade: O nome salvo no banco (do upload)
+            if (!empty($r->imagem)) {
+                $nomeArquivo = $r->imagem;
+            } 
+            // 2. Fallback: O ID (para os produtos antigos de teste: 1.jpg, 2.jpg...)
+            else {
+                $nomeArquivo = "{$id}.jpg";
+            }
 
-            // Se o arquivo não existe → usa placeholder
+            // Monta o caminho
+            $imgWeb = BASE_URL . "/img/produtos/" . $nomeArquivo;
+            $imgPath = BASE_PATH . "/public/img/produtos/" . $nomeArquivo;
+
+            // 3. Se o arquivo físico não existir, usa placeholder
             if (!file_exists($imgPath)) {
                 $imgWeb = BASE_URL . "/img/placeholder.jpg";
             }

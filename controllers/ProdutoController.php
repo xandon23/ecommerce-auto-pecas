@@ -41,35 +41,54 @@ class ProdutoController
         ]);
     }
 
-    public function salvar()
+    public function salvar() 
     {
-        //print_r($_POST);
-        //print_r($_FILES);
-        if (!empty($_FILES["imagem"]["name"])) {
-            //nome para o arquivo
-            $imagem = time() . ".jpg";
-            //mover o arquivo para o servidor
-            if (!move_uploaded_file($_FILES["imagem"]["tmp_name"], "arquivos/{$imagem}")) {
-                echo "<script>mensagem('Erro ao copiar imagem','error','')</script>";
+        $preco = $_POST["preco"];
+
+        // Se o número tiver uma vírgula (Formato Brasileiro: 1.200,50 ou 649,90)
+        if (strpos($preco, ',') !== false) {
+            $preco = str_replace(".", "", $preco); // Remove o ponto de milhar
+            $preco = str_replace(",", ".", $preco); // Troca a vírgula pelo ponto decimal
+        }
+        
+        $_POST["preco"] = $preco;
+
+        // 2. Lógica de Upload da Imagem
+        // Verifica se uma imagem foi enviada
+        if (!empty($_FILES['imagem']['name'])) {
+            
+            // Define um nome único para não substituir outras (timestamp)
+            $nomeArquivo = time() . ".jpg";
+            
+            // Define o caminho ABSOLUTO da pasta de destino
+            // BASE_PATH vem do index.php (C:/xampp/htdocs/ecommerce-auto-pecas)
+            $diretorioDestino = BASE_PATH . "/public/img/produtos/";
+
+            // Se a pasta não existir, cria-a automaticamente
+            if (!is_dir($diretorioDestino)) {
+                mkdir($diretorioDestino, 0777, true);
+            }
+
+            $caminhoCompleto = $diretorioDestino . $nomeArquivo;
+
+            // Tenta mover o arquivo
+            if (move_uploaded_file($_FILES['imagem']['tmp_name'], $caminhoCompleto)) {
+                // Se funcionou, adiciona o nome do arquivo ao POST para salvar no banco
+                $_POST['imagem'] = $nomeArquivo; // Salva no banco apenas "176395...jpg"
+            } else {
+                echo "<script>alert('Erro ao fazer upload da imagem.'); history.back();</script>";
                 exit;
             }
-            $_POST["imagem"] = $imagem;
         }
 
-        // 1.600,90 -> 1600,90 -> 1600.90
-        $valor = str_replace(".", "", $_POST["valor"]);
-        $valor = str_replace(",", ".", $valor);
-
-        $_POST["valor"] = $valor;
-
+        // 3. Salva no Banco de Dados
+        // (Chama o Model Produto)
         $msg = $this->produto->salvar($_POST);
 
-        if ($msg == 1) {
-            echo "<script>mensagem('Registro salvo','ok','produto/listar')</script>";
-            exit;
+        if ($msg) { // Se retornou true ou 1
+            echo "<script>alert('Produto salvo com sucesso!'); location.href='".BASE_URL."/admin/produtos';</script>";
         } else {
-            echo "<script>mensagem('Erro ao salvar', 'error','')</script>";
-            exit;
+            echo "<script>alert('Erro ao salvar no banco de dados.'); history.back();</script>";
         }
     }
 
@@ -77,14 +96,14 @@ class ProdutoController
     {
         // Busca todos os produtos
         $lista = $this->produto->listar();
-        
+
         // Processa as imagens para cada produto da lista
         foreach ($lista as $k => $item) {
             $id = $item->id; // ou $item->id_produto dependendo do seu Model
-            
+
             $imgWeb = BASE_URL . "/img/produtos/{$id}.jpg";
             $imgPath = BASE_PATH . "/public/img/produtos/{$id}.jpg";
-            
+
             if (!file_exists($imgPath)) {
                 $imgWeb = BASE_URL . "/img/placeholder.jpg";
             }
@@ -114,5 +133,38 @@ class ProdutoController
         } else {
             echo "<script>mensagem('Erro ao excluir','error','')</script>";
         }
+    }
+
+    public function novo()
+    {
+        // Verifica se é admin (Segurança)
+        if (empty($_SESSION['usuario']['tipo']) || $_SESSION['usuario']['tipo'] !== 'admin') {
+            header('Location: ' . BASE_URL . '/home');
+            exit;
+        }
+
+        $categorias = $this->categoria->listar();
+        render('admin/formulario_produto', [
+            'titulo' => 'Novo Produto',
+            'categorias' => $categorias,
+            'produto' => null // Nulo porque é novo
+        ]);
+    }
+
+    public function editar($id)
+    {
+        if (empty($_SESSION['usuario']['tipo']) || $_SESSION['usuario']['tipo'] !== 'admin') {
+            header('Location: ' . BASE_URL . '/home');
+            exit;
+        }
+
+        $produto = $this->produto->getDado($id);
+        $categorias = $this->categoria->listar();
+
+        render('admin/formulario_produto', [
+            'titulo' => 'Editar Produto',
+            'categorias' => $categorias,
+            'produto' => $produto
+        ]);
     }
 }
