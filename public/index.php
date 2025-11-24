@@ -1,15 +1,23 @@
 <?php
+// public/index.php
+
 session_start();
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-define('BASE_PATH', dirname(__DIR__));
+// Caminhos base
+define('BASE_PATH', dirname(__DIR__)); // pasta raiz do projeto
 define('APP_CONTROLLERS', BASE_PATH . '/controllers');
 define('APP_MODELS', BASE_PATH . '/models');
 define('APP_VIEWS', BASE_PATH . '/views');
 define('APP_CONFIG', BASE_PATH . '/config');
 
+// *** MUITO IMPORTANTE ***
+// Tem que bater com o caminho que aparece NO NAVEGADOR até a pasta public
+define('BASE_URL', '/1a/ecommerce-auto-pecas-main/ecommerce-auto-pecas-main/public');
+
+// Autoload simples de controllers, models e config
 spl_autoload_register(function ($class) {
     $paths = [APP_CONTROLLERS, APP_MODELS, APP_CONFIG];
     foreach ($paths as $p) {
@@ -26,70 +34,56 @@ spl_autoload_register(function ($class) {
     }
 });
 
-function render(string $view, array $data = []): void
-{
+// Função pra renderizar views .phtml
+function render(string $view, array $data = []): void {
+    extract($data);
     $viewFile = APP_VIEWS . '/' . $view . '.phtml';
+
     if (!file_exists($viewFile)) {
         http_response_code(500);
         echo "<h1>View não encontrada: {$view}.phtml</h1>";
-        echo "<p>Procurado em: {$viewFile}</p>";
-        exit;
+        return;
     }
-    extract($data, EXTR_SKIP);
-    include $viewFile;
+
+    require $viewFile;
 }
 
-/* ---------- Router ---------- */
-$scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
-$scriptDir = str_replace('\\', '/', dirname($scriptName));
-$scriptDir = rtrim($scriptDir, '/');
-define('BASE_URL', $scriptDir); // Agora BASE_URL sempre existe!
+// ------------- ROTEAMENTO -------------
+// URL vem do .htaccess como ?url=controller/acao/param1/param2...
+$url = $_GET['url'] ?? 'home/index';
+$url = trim($url, '/');
 
-// 2. PEGA A URL
-if (isset($_GET['url'])) {
-    $uri = $_GET['url'];
-} else {
-    // Fallback caso o .htaccess falhe
-    $requestUri = $_SERVER['REQUEST_URI'] ?? '/';
-    $uri = parse_url($requestUri, PHP_URL_PATH) ?? '/';
-    if ($scriptDir !== '' && $scriptDir !== '/' && strpos($uri, $scriptDir) === 0) {
-        $uri = substr($uri, strlen($scriptDir));
-    }
-}
+$partes = explode('/', $url);
 
-$uri = trim($uri, '/');
-$uri = empty($uri) ? '/' : $uri;
+$controllerName = ucfirst($partes[0]) . 'Controller';
+$actionName = $partes[1] ?? 'index';
+$params = array_slice($partes, 2);
 
-// 3. QUEBRA EM SEGMENTOS
-// (O seu código original das linhas 70-107)
-$segments = $uri === '/' ? [] : explode('/', $uri);
-
-// Padrões
-$controller = $segments[0] ?? 'home';
-$action = $segments[1] ?? 'index';
-$params = array_slice($segments, 2);
-
-// ... resto do código continua igual
-// Nome da classe do controller
-$controllerClass = ucfirst($controller) . 'Controller';
-
-$method = preg_replace_callback('/(-([a-z]))/', function ($m) {
-    return strtoupper($m[2]);
-}, $action);
-
-// Carrega e executa
-if (!class_exists($controllerClass)) {
+// Caminho do arquivo do controller
+$controllerFile = APP_CONTROLLERS . '/' . $controllerName . '.php';
+if (!file_exists($controllerFile)) {
     http_response_code(404);
-    echo "<h1>404</h1><p>Controller <strong>{$controllerClass}</strong> não encontrado.</p>";
+    echo "<h1>404 - Controller não encontrado</h1>";
+    echo "<p>Arquivo <strong>{$controllerName}.php</strong> não existe em /controllers.</p>";
     exit;
 }
 
-$controllerObj = new $controllerClass();
+require_once $controllerFile;
 
-if (!method_exists($controllerObj, $method)) {
-    http_response_code(404);
-    echo "<h1>404</h1><p>Ação <strong>{$controllerClass}::{$method}()</strong> não encontrada.</p>";
+if (!class_exists($controllerName)) {
+    http_response_code(500);
+    echo "<h1>Erro - Classe do controller não encontrada</h1>";
     exit;
 }
 
-call_user_func_array([$controllerObj, $method], $params);
+$controller = new $controllerName();
+
+if (!method_exists($controller, $actionName)) {
+    http_response_code(404);
+    echo "<h1>404 - Ação não encontrada</h1>";
+    echo "<p>O método <strong>{$actionName}()</strong> não existe no controller <strong>{$controllerName}</strong>.</p>";
+    exit;
+}
+
+// Chama a action com os parâmetros da URL (carrinho/remover/14 etc.)
+call_user_func_array([$controller, $actionName], $params);

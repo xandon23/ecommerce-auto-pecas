@@ -1,6 +1,6 @@
 <?php
 class HistoriaController {
     public function index() {
-        render('historia', ['titulo' => 'Quem Somos']);
+        render('menu/historia', ['titulo' => 'Quem Somos']);
     }
 }

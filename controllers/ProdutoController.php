@@ -100,7 +100,7 @@ class ProdutoController
 
     public function excluir($id)
     {
-        $dados = $this->produto->getDados($id);
+        $dados = $this->produto->getDado($id);
 
         if (!empty($dados->produto_id)) {
             echo "<script>mensagem('Este produto não pode ser excluído pois tem uma venda com ele','error','')</script>";

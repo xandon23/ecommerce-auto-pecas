@@ -1,7 +1,7 @@
 <?php
+
 class Produto
 {
-
     private $pdo;
 
     public function __construct($pdo)
@@ -9,90 +9,107 @@ class Produto
         $this->pdo = $pdo;
     }
 
+    /**
+     * Insere ou atualiza um produto
+     * $dados pode vir com:
+     *  - id  OU id_produto
+     *  - categoria_id OU id_categoria
+     */
     public function salvar($dados)
     {
-        // insert - o id for vazio
-        // update - quanto tiver imagem
-        // update - quanto não existir imagem
-        if (empty($dados["id"])) {
-            // insert
-            $sql = "insert into produto (nome, categoria_id, descricao, imagem, preco, estoque)
-                values (:nome, :categoria_id, :descricao, :imagem, :preco, :estoque)";
+        // Normaliza nomes de campos
+        $id          = $dados['id']          ?? $dados['id_produto']   ?? null;
+        $idCategoria = $dados['categoria_id']?? $dados['id_categoria'] ?? null;
+        $nome        = $dados['nome']        ?? null;
+        $descricao   = $dados['descricao']   ?? null;
+        $preco       = $dados['preco']       ?? null;
+        $estoque     = $dados['estoque']     ?? null;
+
+        if (empty($id)) {
+            // INSERT em 'produtos'
+            $sql = "INSERT INTO produtos 
+                        (id_categoria, nome, descricao, preco, estoque)
+                    VALUES 
+                        (:id_categoria, :nome, :descricao, :preco, :estoque)";
             $consulta = $this->pdo->prepare($sql);
-            $consulta->bindParam(":nome", $dados["nome"]);
-            $consulta->bindParam(":categoria_id", $dados["categoria_id"]);
-            $consulta->bindParam(":descricao", $dados["descricao"]);
-            $consulta->bindParam(":imagem", $dados["imagem"]);
-            $consulta->bindParam(":preco", $dados["preco"]);
-            $consulta->bindParam(":estoque", $dados["estoque"]);
-        } else if (!empty($dados["imagem"])) {
-            //update com imagem
-            $sql = "update produto set nome = :nome, categoria_id = :categoria_id, 
-                descricao = :descricao, imagem = :imagem, preco = :preco, estoque = :estoque
-                where id = :id limit 1";
-            $consulta = $this->pdo->prepare($sql);
-            $consulta->bindParam(":nome", $dados["nome"]);
-            $consulta->bindParam(":categoria_id", $dados["categoria_id"]);
-            $consulta->bindParam(":descricao", $dados["descricao"]);
-            $consulta->bindParam(":imagem", $dados["imagem"]);
-            $consulta->bindParam(":preco", $dados["preco"]);
-            $consulta->bindParam(":estoque", $dados["estoque"]);
-            $consulta->bindParam(":id", $dados["id"]);
         } else {
-            //update sem imagem
-            $sql = "update produto set nome = :nome, categoria_id = :categoria_id, 
-                descricao = :descricao, preco = :preco, estoque = :estoque
-                where id = :id limit 1";
+            // UPDATE em 'produtos'
+            $sql = "UPDATE produtos SET 
+                        id_categoria = :id_categoria,
+                        nome         = :nome,
+                        descricao    = :descricao,
+                        preco        = :preco,
+                        estoque      = :estoque
+                    WHERE id_produto = :id_produto
+                    LIMIT 1";
             $consulta = $this->pdo->prepare($sql);
-            $consulta->bindParam(":nome", $dados["nome"]);
-            $consulta->bindParam(":categoria_id", $dados["categoria_id"]);
-            $consulta->bindParam(":descricao", $dados["descricao"]);
-            $consulta->bindParam(":preco", $dados["preco"]);
-            $consulta->bindParam(":estoque", $dados["estoque"]);
-            $consulta->bindParam(":id", $dados["id"]);
+            $consulta->bindParam(':id_produto', $id);
         }
+
+        $consulta->bindParam(':id_categoria', $idCategoria);
+        $consulta->bindParam(':nome',         $nome);
+        $consulta->bindParam(':descricao',    $descricao);
+        $consulta->bindParam(':preco',        $preco);
+        $consulta->bindParam(':estoque',      $estoque);
 
         return $consulta->execute();
     }
 
+    /**
+     * Lista todos os produtos
+     */
     public function listar()
     {
         $sql = "SELECT 
-                id_produto   AS id,
-                id_categoria AS categoria_id,
-                nome, descricao,
-                NULL         AS imagem,      -- se não tiver imagem no BD
-                preco, estoque
-            FROM produtos
-            ORDER BY nome";
+                    id_produto   AS id,
+                    id_categoria AS categoria_id,
+                    nome,
+                    descricao,
+                    preco,
+                    estoque
+                FROM produtos
+                ORDER BY nome";
+
         $st = $this->pdo->prepare($sql);
         $st->execute();
+
         return $st->fetchAll(PDO::FETCH_OBJ);
     }
 
+    /**
+     * Busca um único produto pelo ID
+     */
     public function getDado($id)
     {
         $sql = "SELECT 
-                id_produto   AS id,
-                id_categoria AS categoria_id,
-                nome, descricao,
-                NULL         AS imagem,
-                preco, estoque
-            FROM produtos
-            WHERE id_produto = :id
-            LIMIT 1";
+                    id_produto   AS id,
+                    id_categoria AS categoria_id,
+                    nome,
+                    descricao,
+                    preco,
+                    estoque
+                FROM produtos
+                WHERE id_produto = :id
+                LIMIT 1";
+
         $st = $this->pdo->prepare($sql);
         $st->bindValue(':id', $id, PDO::PARAM_INT);
         $st->execute();
+
         return $st->fetch(PDO::FETCH_OBJ);
     }
 
+    /**
+     * Exclui um produto
+     */
     public function excluir($id)
     {
+        $sql = "DELETE FROM produtos 
+                WHERE id_produto = :id 
+                LIMIT 1";
 
-        $sql = "delete from produto where id = :id limit 1";
         $consulta = $this->pdo->prepare($sql);
-        $consulta->bindParam(":id", $id);
+        $consulta->bindParam(':id', $id, PDO::PARAM_INT);
 
         return $consulta->execute();
     }

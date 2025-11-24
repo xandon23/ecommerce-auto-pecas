@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Carrinho | Autopeças Dino 🦖</title>
+
+  <!-- Bootstrap e ícones -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background-color: #f6f7f9;
+      color: #0f172a;
+      margin: 0;
+      padding: 0;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    .btn-brand {
+      background-color: #e30613;
+      color: #fff;
+      border: none;
+    }
+
+    .btn-brand:hover {
+      background-color: #b90510;
+      color: #fff;
+    }
+
+    .header-sticky {
+      position: sticky;
+      top: 0;
+      z-index: 1030;
+    }
+
+    .topbar {
+      background-color: #0f172a;
+      color: #fff;
+      font-size: 0.9rem;
+      padding: 5px 0;
+    }
+
+    .topbar a {
+      color: #fff;
+      margin-left: 10px;
+    }
+
+    .topbar a:hover {
+      color: #e30613;
+    }
+
+    header {
+      background-color: #fff;
+      border-bottom: 1px solid #ddd;
+    }
+
+    header .logo {
+      font-weight: bold;
+      font-size: 1.5rem;
+      color: #000;
+    }
+
+    header .logo span {
+      color: #e30613;
+    }
+
+    .nav-cats .nav-link {
+      font-weight: 600;
+      color: #111;
+    }
+
+    .nav-cats .nav-link:hover {
+      color: #e30613;
+    }
+
+    /* --- ESTILO ESPECÍFICO DO CARRINHO --- */
+
+    .cart-header {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .cart-header i {
+      font-size: 1.7rem;
+      color: #e30613;
+    }
+
+    .table thead th {
+      background-color: #f1f5f9;
+      border-bottom-width: 2px;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: #64748b;
+    }
+
+    .table tbody td {
+      vertical-align: middle;
+    }
+
+    .cart-total-row {
+      background-color: #0f172a;
+      color: #fff;
+    }
+
+    .cart-total-row td {
+      border-top: none;
+    }
+
+    .badge-qtd {
+      font-size: 0.85rem;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background-color: #e5e7eb;
+      color: #111827;
+    }
+
+    .cart-empty {
+      background: #fff;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+    }
+
+    footer {
+      background-color: #0f172a;
+      color: #fff;
+      padding: 30px 0;
+      margin-top: 40px;
+    }
+
+    footer a {
+      color: #cbd5e1;
+    }
+
+    footer a:hover {
+      color: #e5e7eb;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="container d-flex justify-content-between">
+      <div>🛒 Revise seus itens antes de finalizar a compra</div>
+      <div>
+        <a href="<?= BASE_URL ?>/historia">Quem Somos</a>
+        <?php if (isset($_SESSION['usuario'])): ?>
+          <span>Olá, <?= $_SESSION['usuario']['nome'] ?></span>
+          <a href="<?= BASE_URL ?>/index/sair" class="bi bi-box-arrow-right"> Sair</a>
+        <?php else: ?>
+          <a href="<?= BASE_URL ?>/index" class="bi bi-person"> Entrar</a>
+        <?php endif; ?>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="header-sticky">
+    <div class="container py-3">
+      <div class="row g-3 align-items-center">
+        <div class="col-6 col-lg-3">
+          <a href="<?= BASE_URL ?>/home" class="logo text-decoration-none">Autopeças <span>Dino</span> 🦖</a>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <form action="/buscar" class="d-flex" role="search">
+            <input name="q" class="form-control form-control-lg" placeholder="Busque por peça, marca, veículo…">
+            <button class="btn btn-brand btn-lg ms-2"><i class="bi bi-search"></i></button>
+          </form>
+        </div>
+
+        <div class="col-6 col-lg-3 text-end position-relative">
+          <a href="<?= BASE_URL ?>/carrinho" class="position-relative">
+            <i class="bi bi-cart3"></i> Carrinho
+            <!-- aqui depois dá pra colocar a quantidade -->
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <nav class="border-top bg-white">
+      <div class="container">
+        <ul class="nav nav-cats py-2 overflow-auto">
+          <li class="nav-item"><a class="nav-link" href="/c/ferramentas">Ferramentas</a></li>
+          <li class="nav-item"><a class="nav-link" href="/c/freios">Freios</a></li>
+          <li class="nav-item"><a class="nav-link" href="/c/suspensao">Suspensão</a></li>
+          <li class="nav-item"><a class="nav-link" href="/c/oleo-filtros">Óleo & Filtros</a></li>
+          <li class="nav-item"><a class="nav-link" href="/c/eletrica">Elétrica</a></li>
+          <li class="nav-item"><a class="nav-link" href="/c/acessorios">Acessórios</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <!-- CONTEÚDO DO CARRINHO -->
+  <main class="container my-5">
+    <div class="cart-header">
+      <i class="bi bi-cart-check"></i>
+      <div>
+        <h2 class="mb-0">Meu Carrinho de Compras</h2>
+        <small class="text-muted">Confira os itens antes de finalizar sua compra.</small>
+      </div>
+    </div>
+
+    <?php if (empty($itens)): ?>
+      <div class="cart-empty">
+        <h5 class="mb-2">Seu carrinho está vazio.</h5>
+        <p class="mb-3 text-muted">Você ainda não adicionou nenhum produto. Explore nossas ofertas e monte seu pedido.</p>
+        <a href="<?= BASE_URL ?>/home" class="btn btn-brand">
+          <i class="bi bi-arrow-left"></i> Voltar para a loja
+        </a>
+      </div>
+    <?php else: ?>
+      <div class="table-responsive shadow-sm bg-white rounded-3">
+        <table class="table align-middle mb-0">
+          <thead>
+            <tr>
+              <th style="width: 100px;">Produto</th>
+              <th>Descrição</th>
+              <th>Preço Unit.</th>
+              <th>Qtd</th>
+              <th>Subtotal</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php 
+            $total = 0;
+            foreach ($itens as $item): 
+              $subtotal = $item['preco'] * $item['qtd'];
+              $total += $subtotal;
+            ?>
+              <tr>
+                <td>
+                  <img src="<?= $item['img'] ?>" alt="<?= htmlspecialchars($item['nome']) ?>" 
+                       class="img-thumbnail" 
+                       style="width: 80px; height: 80px; object-fit: cover;">
+                </td>
+                <td>
+                  <h6 class="mb-1"><?= htmlspecialchars($item['nome']) ?></h6>
+                  <span class="badge-qtd">ID: <?= $item['id'] ?></span>
+                </td>
+                <td>R$ <?= number_format($item['preco'], 2, ',', '.') ?></td>
+                <td><?= $item['qtd'] ?></td>
+                <td><strong>R$ <?= number_format($subtotal, 2, ',', '.') ?></strong></td>
+                <td class="text-end">
+                  <a href="<?= BASE_URL ?>/carrinho/remover/<?= $item['id'] ?>" 
+                     class="btn btn-sm btn-outline-danger">
+                    <i class="bi bi-trash"></i> Remover
+                  </a>
+                </td>
+              </tr>
+            <?php endforeach; ?>
+          </tbody>
+          <tfoot>
+            <tr class="cart-total-row">
+              <td colspan="4" class="text-end fs-5"><strong>Total:</strong></td>
+              <td colspan="2" class="fs-5 fw-bold">R$ <?= number_format($total, 2, ',', '.') ?></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-4 gap-3">
+        <a href="<?= BASE_URL ?>/home" class="btn btn-outline-secondary">
+          <i class="bi bi-arrow-left"></i> Continuar Comprando
+        </a>
+        <a href="<?= BASE_URL ?>/carrinho/finalizar" class="btn btn-success btn-lg">
+          Finalizar Compra <i class="bi bi-check-lg"></i>
+        </a>
+      </div>
+    <?php endif; ?>
+  </main>
+
+  <!-- Rodapé simples -->
+  <footer>
+    <div class="container text-center">
+      <p class="mb-1">&copy; <?= date('Y') ?> Autopeças Dino — Todos os direitos reservados.</p>
+      <small class="text-secondary">Qualidade, confiança e preço justo para o seu carro.</small>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

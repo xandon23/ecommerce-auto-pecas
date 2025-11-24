@@ -1,52 +1,58 @@
 <?php
 class HomeController {
-    
-    public function index() {
-        
-        // 1) Pega o PDO da sua Conexao
-        $pdo = Conexao::getInstance();
-        
-        // 2) Instancia o Model (CORRIGIDO)
-        $produtoModel = new Produto($pdo);
-        
-        // 3) Busca no banco
-        $rows = $produtoModel->listar(); // vem como objetos (PDO::FETCH_OBJ)
 
-        // 4) Mapeia para as chaves que a view já usa: (CORRIGIDO)
+    public function index() {
+
+        // 1) Conexão
+        $pdo = Conexao::getInstance();
+
+        // 2) Instancia o model corretamente
+        $produtoModel = new Produto($pdo);
+
+        // 3) Busca lista de produtos no banco
+        $rows = $produtoModel->listar();
+
+        // Se der erro e voltar null, coloca array vazio
+        if (!is_array($rows)) {
+            $rows = [];
+        }
+
+        // 4) Monta array final para a view
         $produtos = array_map(function ($r) {
-            
-            $id = (int)$r->id; // Alias de id_produto
-            
-            // --- INÍCIO DA CORREÇÃO ---
-            
-            // 4.1. Define o caminho do ficheiro (para ver se existe)
-            // BASE_PATH é 'C:\xampp\htdocs\ecommerce-auto-pecas'
+
+            // ID (id_produto AS id)
+            $id = (int)$r->id;
+
+            // Caminho físico do arquivo
             $imgPath = BASE_PATH . "/public/img/produtos/{$id}.jpg";
 
-            // 4.2. Define o caminho do URL (o que vai para o HTML)
-            // BASE_URL é '/ecommerce-auto-pecas/public'
-            $imgWeb = BASE_URL . "/img/produtos/{$id}.jpg";
+            // Caminho público (URL)
+            $imgWeb  = BASE_URL . "/img/produtos/{$id}.jpg";
 
-            // 4.3. Se o ficheiro NÃO existir no disco, usa o placeholder
+            // Se o arquivo não existe → usa placeholder
             if (!file_exists($imgPath)) {
-                $imgWeb = BASE_URL . "/img/placeholder.jpg"; // (Assumindo que tem um placeholder.jpg)
+                $imgWeb = BASE_URL . "/img/placeholder.jpg";
             }
-            
-            // --- FIM DA CORREÇÃO ---
 
             return [
-                'nome'       => $r->nome,
-                'preco'      => (float)$r->preco,
-                'preco_old'  => null, // se não tiver promo no BD
-                'img'        => $imgWeb, // AGORA ENVIA O URL COMPLETO
-                'slug'       => (string)$id, // a view espera "slug", usamos o id
+                'nome'      => $r->nome,
+                'preco'     => (float)$r->preco,
+                'preco_old' => null,
+                'img'       => $imgWeb,
+                'slug'      => (string)$id,
             ];
+
         }, $rows);
-        
-        // 5) Renderiza passando também os produtos
-        render('home', [
-            'titulo'   => 'Home',
-            'produtos' => $produtos
-        ]);
+        $produtosDestaque = $produtos;
+        shuffle($produtosDestaque);
+        $produtosDestaque = array_slice($produtosDestaque, 0, 10);
+
+
+     render('menu/home', [
+    'titulo'   => 'Home',
+    'produtos' => $produtos,
+    'carrossel' => $produtosDestaque
+]);
+
     }
 }
