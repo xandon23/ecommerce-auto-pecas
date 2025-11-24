@@ -9,12 +9,6 @@ class Produto
         $this->pdo = $pdo;
     }
 
-    /**
-     * Insere ou atualiza um produto
-     * $dados pode vir com:
-     *  - id  OU id_produto
-     *  - categoria_id OU id_categoria
-     */
     public function salvar($dados)
     {
         // Normaliza nomes de campos

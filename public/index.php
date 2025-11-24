@@ -15,7 +15,7 @@ define('APP_CONFIG', BASE_PATH . '/config');
 
 // *** MUITO IMPORTANTE ***
 // Tem que bater com o caminho que aparece NO NAVEGADOR até a pasta public
-define('BASE_URL', '/1a/ecommerce-auto-pecas-main/ecommerce-auto-pecas-main/public');
+define('BASE_URL', '/ecommerce-auto-pecas/public');
 
 // Autoload simples de controllers, models e config
 spl_autoload_register(function ($class) {

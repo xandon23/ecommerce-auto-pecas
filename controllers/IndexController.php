@@ -21,7 +21,7 @@ class IndexController
             header('Location: ' . BASE_URL . '/home');
             exit;
         }
-        render('login', ['titulo' => 'Login']);
+        render('login/login', ['titulo' => 'Login']);
     }
 
     public function verificar()
@@ -79,7 +79,7 @@ class IndexController
 
     public function cadastro()
     {
-        render('cadastro', ['titulo' => 'Criar Conta']);
+        render('login/cadastro', ['titulo' => 'Criar Conta']);
     }
 
     // 2. Recebe os dados e salva
