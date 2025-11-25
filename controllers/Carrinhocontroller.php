@@ -84,4 +84,33 @@ class CarrinhoController
             'total' => $total
         ]);
     }
+    
+    public function confirmar() {
+        // 1. Segurança
+        if (!isset($_SESSION['usuario']) || empty($_SESSION['carrinho'])) {
+            header('Location: ' . BASE_URL . '/home');
+            exit;
+        }
+
+        // 2. Instancia os Models
+        $pdo = Conexao::getInstance();
+        $pedidoModel = new Pedido($pdo);
+
+        // 3. Tenta Finalizar (Salvar no banco e baixar estoque)
+        $sucesso = $pedidoModel->finalizarPedido(
+            $_SESSION['usuario']['id'], 
+            $_SESSION['carrinho']
+        );
+
+        if ($sucesso) {
+            // 4. Se deu certo: Limpa o carrinho e mostra sucesso
+            unset($_SESSION['carrinho']);
+            
+            // Renderiza uma página de agradecimento
+            render('carrinho/sucesso', ['titulo' => 'Pedido Confirmado']);
+        } else {
+            // 5. Se deu erro (ex: sem estoque)
+            echo "<script>alert('Erro ao finalizar: Estoque insuficiente ou erro no sistema.'); history.back();</script>";
+        }
+    }
 }

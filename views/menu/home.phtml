@@ -110,64 +110,65 @@
       color: #e30613;
     }
 
-   /* Cards menores e mais estilosos no carrossel */
-.card-product-mini {
-    border: 0;
-    border-radius: 12px;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    padding: 4px;
-    background: #fff;
-}
-
-.card-product-mini:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 22px rgba(0,0,0,0.12);
-}
-
-/* Imagem menor, centralizada */
-.thumb-mini {
-    height: 130px;
-    object-fit: contain;
-    padding: 8px;
-}
-
-/* Título compacto */
-.card-product-mini .card-title {
-    font-size: 0.85rem;
-    line-height: 1.2;
-    margin-bottom: 4px;
-}
-
-/* Preço destacadinho */
-.price-mini {
-    font-size: 1rem;
-    font-weight: 700;
-    color: #e53935; /* vermelho leve */
-}
-
-/* Arruma bolinhas e setas do carrossel */
-#carouselProdutos .carousel-indicators [data-bs-target] {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-}
-
-#carouselProdutos .carousel-control-prev-icon,
-#carouselProdutos .carousel-control-next-icon {
-    filter: drop-shadow(0 0 4px rgba(0,0,0,0.6));
-}
-
-/* Espaço menor em telas pequenas */
-@media (max-width: 576px) {
-    .thumb-mini {
-        height: 110px;
-    }
-
+    /* Cards menores e mais estilosos no carrossel */
     .card-product-mini {
-        border-radius: 10px;
+      border: 0;
+      border-radius: 12px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      padding: 4px;
+      background: #fff;
     }
-}
+
+    .card-product-mini:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
+    }
+
+    /* Imagem menor, centralizada */
+    .thumb-mini {
+      height: 130px;
+      object-fit: contain;
+      padding: 8px;
+    }
+
+    /* Título compacto */
+    .card-product-mini .card-title {
+      font-size: 0.85rem;
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+
+    /* Preço destacadinho */
+    .price-mini {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #e53935;
+      /* vermelho leve */
+    }
+
+    /* Arruma bolinhas e setas do carrossel */
+    #carouselProdutos .carousel-indicators [data-bs-target] {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    #carouselProdutos .carousel-control-prev-icon,
+    #carouselProdutos .carousel-control-next-icon {
+      filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.6));
+    }
+
+    /* Espaço menor em telas pequenas */
+    @media (max-width: 576px) {
+      .thumb-mini {
+        height: 110px;
+      }
+
+      .card-product-mini {
+        border-radius: 10px;
+      }
+    }
 
 
     /* ------------------------------
@@ -248,7 +249,7 @@
         <?php if (isset($_SESSION['usuario'])): ?>
           <span>Olá, <?= $_SESSION['usuario']['nome'] ?></span>
           <a href="<?= BASE_URL ?>/index/sair" class="bi bi-box-arrow-right"> Sair</a>
-          <a href="//listar"><i class="bi bi-receipt"></i> Meus pedidos</a>
+          <a href="<?= BASE_URL ?>/pedido/listar" class="bi bi-receipt"> Meus pedidos</a>
         <?php else: ?>
           <a href="<?= BASE_URL ?>/index" class="bi bi-person"> Entrar</a>
         <?php endif; ?>
@@ -265,14 +266,16 @@
         </div>
 
         <div class="col-12 col-lg-6">
-          <form action="/buscar" class="d-flex" role="search">
-            <input name="q" class="form-control form-control-lg" placeholder="Busque por peça, marca, veículo…">
-            <button class="btn btn-brand btn-lg ms-2"><i class="bi bi-search"></i></button>
+          <form action="<?= BASE_URL ?>/produto/buscar" method="get" class="d-flex" role="search">
+            <input class="form-control form-control-lg" type="search" name="q" placeholder="Busque por peça, marca, veículo..." aria-label="Search" required>
+            <button class="btn btn-brand btn-lg ms-2" type="submit">
+              <i class="bi bi-search"></i>
+            </button>
           </form>
         </div>
 
         <div class="col-6 col-lg-3 text-end">
-      <a href="<?= BASE_URL ?>/carrinho">>
+          <a href="<?= BASE_URL ?>/carrinho">>
             <i class="bi bi-cart3"></i> Carrinho
             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
           </a>
@@ -281,88 +284,97 @@
     </div>
 
     <nav class="border-top bg-white">
-      <div class="container">
-        <ul class="nav nav-cats py-2 overflow-auto">
-          <li class="nav-item"><a class="nav-link" href="/c/ferramentas">Ferramentas</a></li>
-          <li class="nav-item"><a class="nav-link" href="/c/freios">Freios</a></li>
-          <li class="nav-item"><a class="nav-link" href="/c/suspensao">Suspensão</a></li>
-          <li class="nav-item"><a class="nav-link" href="/c/oleo-filtros">Óleo & Filtros</a></li>
-          <li class="nav-item"><a class="nav-link" href="/c/eletrica">Elétrica</a></li>
-          <li class="nav-item"><a class="nav-link" href="/c/acessorios">Acessórios</a></li>
+    <div class="container">
+        <ul class="nav nav-cats py-2 overflow-auto flex-nowrap">
+            
+            <li class="nav-item">
+                <a class="nav-link text-dark fw-bold" href="<?= BASE_URL ?>/produto/listar">Todos</a>
+            </li>
+
+            <?php if (!empty($categorias)): ?>
+                <?php foreach ($categorias as $cat): ?>
+                    <li class="nav-item">
+                        <a class="nav-link text-secondary" href="<?= BASE_URL ?>/produto/categoria/<?= $cat->id_categoria ?>">
+                            <?= $cat->nome ?>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            <?php endif; ?>
+
         </ul>
-      </div>
-    </nav>
+    </div>
+</nav>
   </header>
-<section class="container my-4">
-  <h5 class="mb-3 fw-bold">Ofertas em destaque</h5>
+  <section class="container my-4">
+    <h5 class="mb-3 fw-bold">Ofertas em destaque</h5>
 
-  <div id="carouselProdutos" class="carousel slide" data-bs-ride="carousel">
-    <div class="carousel-inner">
+    <div id="carouselProdutos" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
 
-      <?php 
-      // quebra em grupos de 3
-      $chunks = array_chunk($carrossel, 3);
-      foreach ($chunks as $index => $grupo): ?>
-        <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
-          <div class="row g-3 justify-content-center">
+        <?php
+        // quebra em grupos de 3
+        $chunks = array_chunk($carrossel, 3);
+        foreach ($chunks as $index => $grupo): ?>
+          <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
+            <div class="row g-3 justify-content-center">
 
-            <?php foreach ($grupo as $p): ?>
-              <div class="col-6 col-md-4 col-lg-3">
-                <div class="card card-product-mini h-100">
-                  <img src="<?= htmlspecialchars($p['img']) ?>" 
-                       class="card-img-top thumb-mini" 
-                       alt="<?= htmlspecialchars($p['nome']) ?>">
+              <?php foreach ($grupo as $p): ?>
+                <div class="col-6 col-md-4 col-lg-3">
+                  <div class="card card-product-mini h-100">
+                    <img src="<?= htmlspecialchars($p['img']) ?>"
+                      class="card-img-top thumb-mini"
+                      alt="<?= htmlspecialchars($p['nome']) ?>">
 
-                  <div class="card-body d-flex flex-column">
-                    <h6 class="card-title text-truncate" 
+                    <div class="card-body d-flex flex-column">
+                      <h6 class="card-title text-truncate"
                         title="<?= htmlspecialchars($p['nome']) ?>">
-                      <?= htmlspecialchars($p['nome']) ?>
-                    </h6>
-                    <div class="mb-2">
-                      <div class="price-mini">
-                        R$ <?= number_format($p['preco'], 2, ',', '.') ?>
+                        <?= htmlspecialchars($p['nome']) ?>
+                      </h6>
+                      <div class="mb-2">
+                        <div class="price-mini">
+                          R$ <?= number_format($p['preco'], 2, ',', '.') ?>
+                        </div>
+                        <div class="text-muted small">
+                          em até 10x sem juros
+                        </div>
                       </div>
-                      <div class="text-muted small">
-                        em até 10x sem juros
-                      </div>
+                      <a href="<?= BASE_URL ?>/produto/index/<?= $p['slug'] ?>"
+                        class="btn btn-sm btn-outline-secondary mt-auto">
+                        Ver
+                      </a>
                     </div>
-                    <a href="<?= BASE_URL ?>/produto/index/<?= $p['slug'] ?>" 
-                       class="btn btn-sm btn-outline-secondary mt-auto">
-                      Ver
-                    </a>
                   </div>
                 </div>
-              </div>
-            <?php endforeach; ?>
+              <?php endforeach; ?>
 
+            </div>
           </div>
-        </div>
-      <?php endforeach; ?>
+        <?php endforeach; ?>
 
+      </div>
+
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselProdutos" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselProdutos" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+      </button>
     </div>
-
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselProdutos" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon"></span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselProdutos" data-bs-slide="next">
-      <span class="carousel-control-next-icon"></span>
-    </button>
-  </div>
-</section>
+  </section>
 
 
-
-    </div>
-
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselProdutos" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon"></span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselProdutos" data-bs-slide="next">
-      <span class="carousel-control-next-icon"></span>
-    </button>
 
   </div>
-</section>
+
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselProdutos" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselProdutos" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </button>
+
+  </div>
+  </section>
 
 
   <!-- Vitrine de produtos -->
