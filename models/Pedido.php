@@ -107,7 +107,7 @@ class Pedido
         return $itensFormatados;
     }
 
-    public function finalizarPedido($idUsuario, $itens)
+    public function finalizarPedido($idUsuario, $itens, $idEndereco)
     {
         try {
             $this->pdo->beginTransaction();
@@ -125,11 +125,12 @@ class Pedido
             // 3. Cria o Pedido com status 'Confirmado'
             // (id_endereco_entrega fixo em 1 por enquanto)
             $sql = "INSERT INTO pedidos (id_usuario, data_pedido, valor_total, status, id_endereco_entrega) 
-                    VALUES (:user, NOW(), :total, 'Confirmado', 1)";
+                    VALUES (:user, NOW(), :total, 'Confirmado', :endereco)";
 
             $stmt = $this->pdo->prepare($sql);
             $stmt->bindValue(':user', $idUsuario);
             $stmt->bindValue(':total', $total);
+            $stmt->bindValue(':endereco', $idEndereco);
             $stmt->execute();
 
             $idPedido = $this->pdo->lastInsertId();

@@ -249,7 +249,7 @@
         <?php if (isset($_SESSION['usuario'])): ?>
           <span>Olá, <?= $_SESSION['usuario']['nome'] ?></span>
           <a href="<?= BASE_URL ?>/index/sair" class="bi bi-box-arrow-right"> Sair</a>
-          <a href="<?= BASE_URL ?>/pedido/listar" class="bi bi-receipt"> Meus pedidos</a>
+          <a href="<?= BASE_URL ?>/cliente" class="bi bi-receipt"> Minha Conta</a>
         <?php else: ?>
           <a href="<?= BASE_URL ?>/index" class="bi bi-person"> Entrar</a>
         <?php endif; ?>

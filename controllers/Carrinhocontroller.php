@@ -77,11 +77,16 @@ class CarrinhoController
             $total += ($item['preco'] * $item['qtd']);
         }
 
+        $pdo = Conexao::getInstance();
+        $enderecoModel = new Endereco($pdo);
+        $meusEnderecos = $enderecoModel->listarPorUsuario($_SESSION['usuario']['id']);
+
         // 5. Renderiza a View correta (sem lógica, só HTML)
         render('carrinho/finalizar', [
             'titulo' => 'Finalizar Pedido',
             'itens' => $itensCarrinho,
-            'total' => $total
+            'total' => $total,
+            'enderecos' => $meusEnderecos
         ]);
     }
     
@@ -92,6 +97,12 @@ class CarrinhoController
             exit;
         }
 
+        $idEndereco = $_POST['id_endereco'] ?? null;
+        if (empty($idEndereco)) {
+            echo "<script>alert('Por favor, selecione ou cadastre um endereço de entrega.'); history.back();</script>";
+            exit;
+        }
+
         // 2. Instancia os Models
         $pdo = Conexao::getInstance();
         $pedidoModel = new Pedido($pdo);
@@ -99,7 +110,8 @@ class CarrinhoController
         // 3. Tenta Finalizar (Salvar no banco e baixar estoque)
         $sucesso = $pedidoModel->finalizarPedido(
             $_SESSION['usuario']['id'], 
-            $_SESSION['carrinho']
+            $_SESSION['carrinho'],
+            $idEndereco
         );
 
         if ($sucesso) {

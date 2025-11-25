@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <title><?= $titulo ?></title>
+</head>
+
+<body class="bg-light">
+<div class="container my-5">
+    <h2 class="mb-4">Minha Conta</h2>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">Meus Dados</div>
+                <div class="card-body">
+                    <p><strong>Nome:</strong> <?= $_SESSION['usuario']['nome'] ?></p>
+                    <hr>
+                    <h5>Alterar Senha</h5>
+                    <form action="<?= BASE_URL ?>/cliente/alterarSenha" method="post">
+                        <div class="mb-2">
+                            <input type="password" name="nova_senha" class="form-control" placeholder="Nova Senha" required>
+                        </div>
+                        <button class="btn btn-sm btn-dark w-100">Salvar Nova Senha</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="d-grid">
+                <a href="<?= BASE_URL ?>/pedido/listar" class="btn btn-outline-primary mb-3">
+                    <i class="bi bi-receipt"></i> Ver Meus Pedidos
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span>Meus Endereços</span>
+                    <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#modalEndereco">
+                        + Novo Endereço
+                    </button>
+                </div>
+                <div class="card-body">
+                    <?php if(empty($enderecos)): ?>
+                        <p class="text-muted">Nenhum endereço cadastrado.</p>
+                    <?php else: ?>
+                        <div class="list-group">
+                            <?php foreach($enderecos as $end): ?>
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong><?= $end->rua ?>, <?= $end->numero ?></strong><br>
+                                        <small><?= $end->bairro ?> - <?= $end->cidade ?>/<?= $end->estado ?></small><br>
+                                        <small class="text-muted">CEP: <?= $end->cep ?></small>
+                                    </div>
+                                    <a href="<?= BASE_URL ?>/cliente/excluirEndereco/<?= $end->id_endereco ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Excluir?')">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalEndereco" tabindex="-1">
+    <div class="modal-dialog">
+        <form class="modal-content" action="<?= BASE_URL ?>/cliente/salvarEndereco" method="post">
+            <div class="modal-header">
+                <h5 class="modal-title">Novo Endereço</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-2">
+                    <div class="col-12"><input type="text" name="rua" class="form-control" placeholder="Rua" required></div>
+                    <div class="col-4"><input type="text" name="numero" class="form-control" placeholder="Número" required></div>
+                    <div class="col-8"><input type="text" name="bairro" class="form-control" placeholder="Bairro" required></div>
+                    <div class="col-8"><input type="text" name="cidade" class="form-control" placeholder="Cidade" required></div>
+                    <div class="col-4"><input type="text" name="estado" class="form-control" placeholder="UF" maxlength="2" required></div>
+                    <div class="col-12"><input type="text" name="cep" class="form-control" placeholder="CEP" required></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Salvar</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
