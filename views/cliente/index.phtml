@@ -14,55 +14,129 @@
 
 <body class="bg-light">
 <div class="container my-5">
-    <h2 class="mb-4">Minha Conta</h2>
+    <div class="row mb-4">
+        <div class="col">
+            <h2>👋 Minha Conta</h2>
+            <p class="text-muted">Gerencie seus dados e endereços de entrega.</p>
+        </div>
+    </div>
 
     <div class="row">
-        <div class="col-md-4">
-            <div class="card mb-4">
-                <div class="card-header">Meus Dados</div>
+        <div class="col-md-4 mb-4">
+            
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white fw-bold">
+                    <i class="bi bi-person-circle"></i> Meus Dados
+                </div>
                 <div class="card-body">
-                    <p><strong>Nome:</strong> <?= $_SESSION['usuario']['nome'] ?></p>
-                    <hr>
-                    <h5>Alterar Senha</h5>
+                    <p class="mb-1"><strong>Nome:</strong> <?= $_SESSION['usuario']['nome'] ?></p>
+                    <p class="mb-0"><strong>ID Cliente:</strong> #<?= $_SESSION['usuario']['id'] ?></p>
+                </div>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-white fw-bold text-danger">
+                    <i class="bi bi-shield-lock"></i> Segurança
+                </div>
+                <div class="card-body">
                     <form action="<?= BASE_URL ?>/cliente/alterarSenha" method="post">
-                        <div class="mb-2">
-                            <input type="password" name="nova_senha" class="form-control" placeholder="Nova Senha" required>
+                        
+                        <div class="mb-3">
+                            <label class="form-label small">Senha Atual</label>
+                            <div class="input-group">
+                                <input type="password" name="senha_atual" id="senha_atual" class="form-control" required>
+                                <button type="button" class="btn btn-outline-secondary" onclick="toggleSenha('senha_atual', 'icon_atual')">
+                                    <i class="bi bi-eye" id="icon_atual"></i>
+                                </button>
+                            </div>
                         </div>
-                        <button class="btn btn-sm btn-dark w-100">Salvar Nova Senha</button>
+
+                        <div class="mb-3">
+                            <label class="form-label small">Nova Senha</label>
+                            <div class="input-group">
+                                <input type="password" name="nova_senha" id="nova_senha" class="form-control" required>
+                                <button type="button" class="btn btn-outline-secondary" onclick="toggleSenha('nova_senha', 'icon_nova')">
+                                    <i class="bi bi-eye" id="icon_nova"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small">Confirmar Nova Senha</label>
+                            <div class="input-group">
+                                <input type="password" name="confirmar_senha" id="confirmar_senha" class="form-control" required>
+                                <button type="button" class="btn btn-outline-secondary" onclick="toggleSenha('confirmar_senha', 'icon_confirma')">
+                                    <i class="bi bi-eye" id="icon_confirma"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-sm btn-danger w-100" type="submit">Salvar Nova Senha</button>
                     </form>
                 </div>
             </div>
-            
-            <div class="d-grid">
-                <a href="<?= BASE_URL ?>/pedido/listar" class="btn btn-outline-primary mb-3">
-                    <i class="bi bi-receipt"></i> Ver Meus Pedidos
+
+<script>
+    function toggleSenha(inputId, iconId) {
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove("bi-eye");
+            icon.classList.add("bi-eye-slash"); // Ícone de olho cortado
+        } else {
+            input.type = "password";
+            icon.classList.remove("bi-eye-slash");
+            icon.classList.add("bi-eye"); // Ícone de olho normal
+        }
+    }
+</script>
+
+            <div class="d-grid mt-4">
+                <a href="<?= BASE_URL ?>/pedido/listar" class="btn btn-primary">
+                    <i class="bi bi-box-seam"></i> Ver Meus Pedidos
                 </a>
             </div>
         </div>
 
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <span>Meus Endereços</span>
+            <div class="card shadow-sm">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+                    <h5 class="mb-0"><i class="bi bi-geo-alt"></i> Endereços de Entrega</h5>
                     <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#modalEndereco">
-                        + Novo Endereço
+                        <i class="bi bi-plus-lg"></i> Novo Endereço
                     </button>
                 </div>
-                <div class="card-body">
-                    <?php if(empty($enderecos)): ?>
-                        <p class="text-muted">Nenhum endereço cadastrado.</p>
+                <div class="card-body p-0">
+                    <?php if (empty($enderecos)): ?>
+                        <div class="p-4 text-center text-muted">
+                            <i class="bi bi-geo-alt display-4 d-block mb-3"></i>
+                            <p>Você ainda não tem endereços cadastrados.</p>
+                        </div>
                     <?php else: ?>
-                        <div class="list-group">
-                            <?php foreach($enderecos as $end): ?>
-                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div class="list-group list-group-flush">
+                            <?php foreach ($enderecos as $end): ?>
+                                <div class="list-group-item p-3 d-flex justify-content-between align-items-center">
                                     <div>
-                                        <strong><?= $end->rua ?>, <?= $end->numero ?></strong><br>
-                                        <small><?= $end->bairro ?> - <?= $end->cidade ?>/<?= $end->estado ?></small><br>
-                                        <small class="text-muted">CEP: <?= $end->cep ?></small>
+                                        <div class="fw-bold">
+                                            <?= $end->rua ?>, <?= $end->numero ?>
+                                            <?php if(!empty($end->bairro)): ?>
+                                                - <?= $end->bairro ?>
+                                            <?php endif; ?>
+                                        </div>
+                                        <div class="small text-muted">
+                                            <?= $end->cidade ?> - <?= $end->estado ?>
+                                        </div>
+                                        <div class="small text-muted">CEP: <?= $end->cep ?></div>
                                     </div>
-                                    <a href="<?= BASE_URL ?>/cliente/excluirEndereco/<?= $end->id_endereco ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Excluir?')">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
+                                    <div>
+                                        <a href="<?= BASE_URL ?>/cliente/excluirEndereco/<?= $end->id_endereco ?>" 
+                                           class="btn btn-sm btn-outline-danger" 
+                                           onclick="return confirm('Tem certeza que deseja excluir este endereço?')">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
                                 </div>
                             <?php endforeach; ?>
                         </div>
@@ -73,25 +147,44 @@
     </div>
 </div>
 
-<div class="modal fade" id="modalEndereco" tabindex="-1">
+<div class="modal fade" id="modalEndereco" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <form class="modal-content" action="<?= BASE_URL ?>/cliente/salvarEndereco" method="post">
             <div class="modal-header">
-                <h5 class="modal-title">Novo Endereço</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <h5 class="modal-title">Cadastrar Novo Endereço</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="row g-2">
-                    <div class="col-12"><input type="text" name="rua" class="form-control" placeholder="Rua" required></div>
-                    <div class="col-4"><input type="text" name="numero" class="form-control" placeholder="Número" required></div>
-                    <div class="col-8"><input type="text" name="bairro" class="form-control" placeholder="Bairro" required></div>
-                    <div class="col-8"><input type="text" name="cidade" class="form-control" placeholder="Cidade" required></div>
-                    <div class="col-4"><input type="text" name="estado" class="form-control" placeholder="UF" maxlength="2" required></div>
-                    <div class="col-12"><input type="text" name="cep" class="form-control" placeholder="CEP" required></div>
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label class="form-label">Rua / Logradouro</label>
+                        <input type="text" name="rua" class="form-control" required>
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label">Número</label>
+                        <input type="text" name="numero" class="form-control" required>
+                    </div>
+                    <div class="col-8">
+                        <label class="form-label">Bairro</label>
+                        <input type="text" name="bairro" class="form-control" required>
+                    </div>
+                    <div class="col-8">
+                        <label class="form-label">Cidade</label>
+                        <input type="text" name="cidade" class="form-control" required>
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label">UF</label>
+                        <input type="text" name="estado" class="form-control" maxlength="2" placeholder="EX: SP" required>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">CEP</label>
+                        <input type="text" name="cep" class="form-control" placeholder="00000-000" required>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Salvar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-success">Salvar Endereço</button>
             </div>
         </form>
     </div>
