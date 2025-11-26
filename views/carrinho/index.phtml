@@ -146,6 +146,19 @@
       color: #e5e7eb;
       text-decoration: underline;
     }
+
+    
+    a[href*="carrinho"] i {
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+  a[href*="carrinho"]:hover i {
+  transform: scale(1.15);
+  color: #b30000;
+}
+    .badge {
+  font-size: 0.75rem;
+  box-shadow: 0 0 4px rgba(0,0,0,0.3);
+}
   </style>
 </head>
 
@@ -168,42 +181,39 @@
   </div>
 
   <!-- Header -->
-  <header class="header-sticky">
+   <header class="header-sticky">
     <div class="container py-3">
       <div class="row g-3 align-items-center">
         <div class="col-6 col-lg-3">
-          <a href="<?= BASE_URL ?>/home" class="logo text-decoration-none">Autopeças <span>Dino</span> 🦖</a>
+        <a href="<?= BASE_URL ?>/home" class="logo text-decoration-none d-flex align-items-center">
+  <img src="<?= BASE_URL ?>/img/logodino.jpg" alt="Autopeças Dino" style="height: 100px; width: 200px; margin-right: 10px;">
+</a>
+
+
         </div>
 
         <div class="col-12 col-lg-6">
-          <form action="/buscar" class="d-flex" role="search">
-            <input name="q" class="form-control form-control-lg" placeholder="Busque por peça, marca, veículo…">
-            <button class="btn btn-brand btn-lg ms-2"><i class="bi bi-search"></i></button>
+          <form action="<?= BASE_URL ?>/produto/buscar" method="get" class="d-flex" role="search">
+            <input class="form-control form-control-lg" type="search" name="q" placeholder="Busque por peça, marca, veículo..." aria-label="Search" required>
+            <button class="btn btn-brand btn-lg ms-2" type="submit">
+              <i class="bi bi-search"></i>
+            </button>
           </form>
         </div>
 
-        <div class="col-6 col-lg-3 text-end position-relative">
-          <a href="<?= BASE_URL ?>/carrinho" class="position-relative">
-            <i class="bi bi-cart3"></i> Carrinho
-            <!-- aqui depois dá pra colocar a quantidade -->
-          </a>
-        </div>
+         <div class="col-6 col-lg-3 text-end">
+  <a href="<?= BASE_URL ?>/carrinho" 
+     class="position-relative text-decoration-none text-dark d-inline-flex align-items-center gap-2">
+    <i class="bi bi-cart3 fs-3 text-danger"></i>
+    <span class="fw-semibold">Carrinho</span>
+    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+      <?= isset($_SESSION['carrinho']) ? count($_SESSION['carrinho']) : 0 ?>
+    </span>
+  </a>
+</div>
       </div>
     </div>
-
-    <nav class="border-top bg-white">
-      <div class="container">
-        <ul class="nav nav-cats py-2 overflow-auto">
-          <li class="nav-item"><a class="nav-link" href="/c/ferramentas">Ferramentas</a></li>
-          <li class="nav-item"><a class="nav-link" href="/c/freios">Freios</a></li>
-          <li class="nav-item"><a class="nav-link" href="/c/suspensao">Suspensão</a></li>
-          <li class="nav-item"><a class="nav-link" href="/c/oleo-filtros">Óleo & Filtros</a></li>
-          <li class="nav-item"><a class="nav-link" href="/c/eletrica">Elétrica</a></li>
-          <li class="nav-item"><a class="nav-link" href="/c/acessorios">Acessórios</a></li>
-        </ul>
-      </div>
-    </nav>
-  </header>
+    </header>
 
   <!-- CONTEÚDO DO CARRINHO -->
   <main class="container my-5">
@@ -285,11 +295,29 @@
     <?php endif; ?>
   </main>
 
-  <!-- Rodapé simples -->
-  <footer>
-    <div class="container text-center">
-      <p class="mb-1">&copy; <?= date('Y') ?> Autopeças Dino — Todos os direitos reservados.</p>
-      <small class="text-secondary">Qualidade, confiança e preço justo para o seu carro.</small>
+   <footer>
+    <div class="container">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <h6>Autopeças Dino</h6>
+          <p>Atendimento seg–sex, 8h–18h.</p>
+        </div>
+        <div class="col-md-4">
+          <h6>Institucional</h6>
+          <ul>
+            <li><a href="/historia">Quem somos</a></li>
+            <li><a href="/politica-privacidade">Política de Privacidade</a></li>
+            <li><a href="/trocas-devolucoes">Trocas e Devoluções</a></li>
+          </ul>
+        </div>
+        <div class="col-md-4">
+          <h6>Contato</h6>
+          <p><i class="bi bi-whatsapp"></i> </p>
+          <p><i class="bi bi-envelope"></i> contato@autopecasdino.com.br</p>
+        </div>
+      </div>
+      <hr>
+      <div class="text-center small">&copy; <?= date('Y') ?> Autopeças Dino — Todos os direitos reservados.</div>
     </div>
   </footer>
 

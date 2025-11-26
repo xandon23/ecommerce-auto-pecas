@@ -1,0 +1,44 @@
+<?php
+
+public function adicionar($id)
+{
+    // se não vier id válido, só volta pro carrinho
+    if (empty($id)) {
+        header('Location: ' . BASE_URL . '/carrinho');
+        exit;
+    }
+
+    $pdo = Conexao::getInstance();
+    $produtoModel = new Produto($pdo);
+    $produto = $produtoModel->getDado($id);
+
+    if ($produto) {
+        if (!isset($_SESSION['carrinho'])) {
+            $_SESSION['carrinho'] = [];
+        }
+
+        // se já existe no carrinho, aumenta qtd
+        if (isset($_SESSION['carrinho'][$id])) {
+            $_SESSION['carrinho'][$id]['qtd']++;
+        } else {
+            $imgWeb  = BASE_URL . "/img/produtos/{$id}.jpg";
+            $imgPath = BASE_PATH . "/public/img/produtos/{$id}.jpg";
+
+            if (!file_exists($imgPath)) {
+                $imgWeb = BASE_URL . "/img/placeholder.jpg";
+            }
+
+            $_SESSION['carrinho'][$id] = [
+                'id'    => $produto->id,
+                'nome'  => $produto->nome,
+                'preco' => $produto->preco,
+                'img'   => $imgWeb,
+                'qtd'   => 1
+            ];
+        }
+    }
+
+    // sempre volta pra página do carrinho (AGORA no padrão certo)
+    header('Location: ' . BASE_URL . '/carrinho');
+    exit;
+}

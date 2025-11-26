@@ -110,6 +110,11 @@
       color: #e30613;
     }
 
+    header .logo img {
+  max-height: 150px;
+  width: auto;
+}
+
     /* Cards menores e mais estilosos no carrossel */
     .card-product-mini {
       border: 0;
@@ -235,6 +240,19 @@
         font-size: 0.9rem;
       }
     }
+
+    a[href*="carrinho"] i {
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+  a[href*="carrinho"]:hover i {
+  transform: scale(1.15);
+  color: #b30000;
+}
+    .badge {
+  font-size: 0.75rem;
+  box-shadow: 0 0 4px rgba(0,0,0,0.3);
+}
+
   </style>
 </head>
 
@@ -262,7 +280,11 @@
     <div class="container py-3">
       <div class="row g-3 align-items-center">
         <div class="col-6 col-lg-3">
-          <a href="/" class="logo text-decoration-none">Autopeças <span>Dino</span> 🦖</a>
+        <a href="<?= BASE_URL ?>/home" class="logo text-decoration-none d-flex align-items-center">
+  <img src="<?= BASE_URL ?>/img/logodino.jpg" alt="Autopeças Dino" style="height: 100px; width: 200px; margin-right: 10px;">
+</a>
+
+
         </div>
 
         <div class="col-12 col-lg-6">
@@ -274,12 +296,17 @@
           </form>
         </div>
 
-        <div class="col-6 col-lg-3 text-end">
-          <a href="<?= BASE_URL ?>/carrinho">>
-            <i class="bi bi-cart3"></i> Carrinho
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
-          </a>
-        </div>
+      <div class="col-6 col-lg-3 text-end">
+  <a href="<?= BASE_URL ?>/carrinho" 
+     class="position-relative text-decoration-none text-dark d-inline-flex align-items-center gap-2">
+    <i class="bi bi-cart3 fs-3 text-danger"></i>
+    <span class="fw-semibold">Carrinho</span>
+    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+      <?= isset($_SESSION['carrinho']) ? count($_SESSION['carrinho']) : 0 ?>
+    </span>
+  </a>
+</div>
+
       </div>
     </div>
 
@@ -459,7 +486,7 @@
         </div>
         <div class="col-md-4">
           <h6>Contato</h6>
-          <p><i class="bi bi-whatsapp"></i> (11) 99999-9999</p>
+          <p><i class="bi bi-whatsapp"></i> </p>
           <p><i class="bi bi-envelope"></i> contato@autopecasdino.com.br</p>
         </div>
       </div>
