@@ -50,25 +50,60 @@ class AdminController {
 
     public function produtos() {
         $pdo = Conexao::getInstance();
-        $produtoModel = new Produto($pdo);
-        $lista = $produtoModel->listar();
+        $termo = $_GET['q'] ?? '';
+
+        if (!empty($termo)) {
+            // Busca por ID ou Nome
+            // Truque: 'id_produto AS id' resolve o erro da sua imagem!
+            $sql = "SELECT *, id_produto AS id FROM produtos 
+                    WHERE nome LIKE :termo OR id_produto = :idExact
+                    ORDER BY id_produto DESC";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(':termo', "%{$termo}%");
+            $stmt->bindValue(':idExact', $termo);
+            $stmt->execute();
+        } else {
+            // Listagem Padrão
+            $sql = "SELECT *, id_produto AS id FROM produtos ORDER BY id_produto DESC";
+            $stmt = $pdo->query($sql);
+        }
+
+        $lista = $stmt->fetchAll(PDO::FETCH_OBJ);
 
         render('admin/produtos', [
             'titulo' => 'Gestão de Produtos',
-            'produtos' => $lista
+            'produtos' => $lista,
+            'busca' => $termo
         ]);
     }
 
     public function usuarios() {
         $pdo = Conexao::getInstance();
-        // Query simples para listar usuários
-        $sql = "SELECT * FROM usuario ORDER BY id_usuario DESC";
-        $stmt = $pdo->query($sql);
+        $termo = $_GET['q'] ?? '';
+
+        if (!empty($termo)) {
+            // Busca por ID, Nome ou Email
+            $sql = "SELECT * FROM usuario 
+                    WHERE nome LIKE :termo 
+                       OR email LIKE :termo 
+                       OR id_usuario = :idExact
+                    ORDER BY id_usuario DESC";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(':termo', "%{$termo}%");
+            $stmt->bindValue(':idExact', $termo);
+            $stmt->execute();
+        } else {
+            // Listagem Padrão
+            $sql = "SELECT * FROM usuario ORDER BY id_usuario DESC";
+            $stmt = $pdo->query($sql);
+        }
+
         $usuarios = $stmt->fetchAll(PDO::FETCH_OBJ);
 
         render('admin/usuarios', [
             'titulo' => 'Gestão de Usuários',
-            'usuarios' => $usuarios
+            'usuarios' => $usuarios,
+            'busca' => $termo
         ]);
     }
 
