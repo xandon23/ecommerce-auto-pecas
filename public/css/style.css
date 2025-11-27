@@ -1,0 +1,180 @@
+/* --- TEMA GERAL E FONTES --- */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f6f7f9;
+    color: #333;
+    margin: 0; padding: 0;
+}
+a { text-decoration: none; }
+
+/* --- CORES DA MARCA (ATUALIZADO) --- */
+:root {
+    /* Cor Principal (O Azul que você pediu) */
+    --main-color: #132c52;
+    
+    /* Cor de Destaque (Botões/Preços - Mantivemos o vermelho para contraste, mas pode mudar) */
+    --brand-color: #e30613; 
+    --brand-hover: #b90510;
+}
+
+/* --- BOTÕES --- */
+.btn-brand {
+    background-color: var(--brand-color);
+    color: #fff;
+    font-weight: 700;
+    border: none;
+    text-transform: uppercase;
+}
+.btn-brand:hover {
+    background-color: var(--brand-hover);
+    color: #fff;
+}
+
+/* --- CABEÇALHO (HEADER) --- */
+.topbar {
+    background-color: var(--main-color); /* Azul */
+    border-bottom: 1px solid rgba(255,255,255,0.1); /* Linha sutil */
+    color: #ccc;
+    font-size: 0.75rem;
+    padding: 4px 0;
+}
+.topbar a { color: #fff; text-decoration: none; transition: color 0.2s; }
+.topbar a:hover { color: var(--brand-color); }
+
+header.header-main {
+    background-color: var(--main-color); /* Azul */
+    padding: 15px 0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    position: sticky; top: 0; z-index: 1030;
+}
+
+/* Barra de Pesquisa */
+.search-container .form-control {
+    border-radius: 4px 0 0 4px;
+    border: none; height: 45px;
+}
+.search-container .btn {
+    background-color: var(--brand-color); /* Botão da lupa continua vermelho para chamar atenção */
+    color: white;
+    border-radius: 0 4px 4px 0;
+    width: 60px; font-size: 1.2rem;
+}
+
+/* Área do Usuário */
+.user-actions { color: white; font-size: 0.85rem; line-height: 1.2; }
+.user-actions i { font-size: 1.8rem; margin-right: 8px; color: rgba(255,255,255,0.7); }
+.user-actions a { color: #fff; }
+.user-actions a.highlight { color: #fff; font-weight: 700; text-decoration: underline; }
+
+/* Menu de Categorias */
+.nav-cats { background-color: #fff; border-bottom: 3px solid var(--brand-color); }
+.nav-cats .nav-link {
+    color: var(--main-color); /* Link azul */
+    font-weight: 700;
+    text-transform: uppercase; font-size: 0.85rem;
+    padding: 12px 15px;
+}
+.nav-cats .nav-link:hover { color: var(--brand-color); background: #f9f9f9; }
+
+/* --- CARTÕES DE PRODUTO --- */
+.card-product {
+    border: 1px solid #eee;
+    transition: all 0.3s ease;
+    background: #fff; border-radius: 8px; padding: 15px;
+}
+.card-product:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    border-color: #ccc;
+}
+.card-product .thumb {
+    height: 180px; width: 100%;
+    object-fit: contain; margin-bottom: 15px;
+    transition: transform 0.3s;
+}
+.card-product:hover .thumb { transform: scale(1.05); }
+
+.price-old { text-decoration: line-through; color: #999; font-size: 0.85rem; }
+.price { color: var(--main-color); font-weight: 800; font-size: 1.4rem; }
+
+/* --- RODAPÉ --- */
+footer {
+    background-color: var(--main-color); /* Azul */
+    color: #fff;
+    padding: 50px 0 20px; margin-top: 60px;
+    border-top: 5px solid var(--brand-color);
+}
+footer h6 { color: #fff; font-weight: 700; text-transform: uppercase; margin-bottom: 20px; }
+footer a { color: rgba(255,255,255,0.7); text-decoration: none; }
+footer a:hover { color: #fff; text-decoration: underline; }
+footer ul { list-style: none; padding: 0; }
+footer li { margin-bottom: 10px; }
+
+/* --- ESTILOS DA LISTAGEM DE PRODUTOS (VITRINE) --- */
+
+/* 1. O Cartão em si */
+.card-product {
+    background: #fff;
+    border: 1px solid #e5e7eb; /* Borda cinza suave */
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    overflow: hidden; /* Garante que nada saia do cartão */
+}
+
+/* Efeito Hover: Levanta e cria sombra */
+.card-product:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+    border-color: #e30613; /* Borda vermelha ao passar o mouse (Estilo Loja do Mecânico) */
+}
+
+/* 2. A Imagem (Thumb) */
+.card-product .thumb {
+    height: 180px; /* Altura fixa obrigatória para alinhar grid */
+    width: 100%;
+    object-fit: contain; /* Mostra a peça inteira sem cortar */
+    padding: 15px;
+    transition: transform 0.3s;
+    background-color: #fff;
+}
+
+.card-product:hover .thumb {
+    transform: scale(1.05); /* Leve zoom na imagem */
+}
+
+/* 3. O Título do Produto */
+.card-product .card-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.4;
+    height: 40px; /* Altura fixa (aprox 2 linhas de texto) */
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Corta texto após 2 linhas */
+    -webkit-box-orient: vertical;
+    margin-bottom: 10px;
+}
+
+.card-product .card-title a:hover {
+    color: #e30613; /* Título fica vermelho ao passar o mouse */
+}
+
+/* 4. O Preço */
+.card-product .price {
+    color: #e30613; /* Vermelho da marca */
+    font-weight: 800;
+    font-size: 1.3rem;
+    line-height: 1;
+}
+
+.card-product .price-old {
+    text-decoration: line-through;
+    color: #9ca3af;
+    font-size: 0.8rem;
+}
+
+/* 5. Ajuste nos Botões */
+.btn-brand {
+    /* Garante que o botão de compra se destaque */
+    box-shadow: 0 2px 5px rgba(227, 6, 19, 0.2);
+}

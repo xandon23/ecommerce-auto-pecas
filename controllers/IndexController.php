@@ -84,27 +84,34 @@ class IndexController
     }
 
     // 2. Recebe os dados e salva
-    public function registrar()
-    {
-        $nome = $_POST['nome'] ?? null;
-        $email = $_POST['email'] ?? null;
-        $senha = $_POST['senha'] ?? null;
+    public function registrar() {
+        $nome           = $_POST['nome'] ?? null;
+        $email          = $_POST['email'] ?? null;
+        $senha          = $_POST['senha'] ?? null;
+        $confirmarSenha = $_POST['confirmar_senha'] ?? null; // Novo campo
 
-        if ($nome && $email && $senha) {
-            // Verifica se o email já existe
-            if ($this->usuario->getEmailUsuario($email)) {
-                echo "<script>alert('Este email já está cadastrado!'); location.href='" . BASE_URL . "/index/cadastro';</script>";
+        if ($nome && $email && $senha && $confirmarSenha) {
+            
+            // 1. Verifica se as senhas batem
+            if ($senha !== $confirmarSenha) {
+                echo "<script>alert('As senhas não coincidem. Tente novamente.'); history.back();</script>";
                 exit;
             }
 
-            // Salva no banco
+            // 2. Verifica se o email já existe
+            if ($this->usuario->getEmailUsuario($email)) {
+                echo "<script>alert('Este email já está cadastrado!'); location.href='".BASE_URL."/index/cadastro';</script>";
+                exit;
+            }
+
+            // 3. Salva no banco
             $this->usuario->salvar([
                 'nome' => $nome,
                 'email' => $email,
                 'senha' => $senha
             ]);
 
-            echo "<script>alert('Conta criada com sucesso! Faça login.'); location.href='" . BASE_URL . "/index';</script>";
+            echo "<script>alert('Conta criada com sucesso! Faça login.'); location.href='".BASE_URL."/index';</script>";
         } else {
             echo "<script>alert('Preencha todos os campos'); history.back();</script>";
         }

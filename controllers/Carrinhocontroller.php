@@ -64,6 +64,56 @@ class CarrinhoController
         render('carrinho/index', compact('itens'));
     }
 
+    /**
+     * Aumenta a quantidade (+1)
+     */
+    public function aumentar($id) {
+        // 1. Verifica se o item existe no carrinho
+        if (!isset($_SESSION['carrinho'][$id])) {
+            header('Location: ' . BASE_URL . '/carrinho');
+            exit;
+        }
+
+        // 2. Busca o produto no banco para conferir o ESTOQUE ATUAL
+        $pdo = Conexao::getInstance();
+        $produtoModel = new Produto($pdo);
+        $produtoBanco = $produtoModel->getDado($id);
+
+        // 3. Quantidade atual no carrinho
+        $qtdAtual = $_SESSION['carrinho'][$id]['qtd'];
+
+        // 4. Verifica se tem estoque para +1
+        if ($produtoBanco && $produtoBanco->estoque > $qtdAtual) {
+            $_SESSION['carrinho'][$id]['qtd']++;
+        } else {
+            echo "<script>alert('Desculpe, estoque máximo atingido para este produto.'); location.href='".BASE_URL."/carrinho';</script>";
+            exit;
+        }
+
+        header('Location: ' . BASE_URL . '/carrinho');
+        exit;
+    }
+
+    /**
+     * Diminui a quantidade (-1)
+     */
+    public function diminuir($id) {
+        if (isset($_SESSION['carrinho'][$id])) {
+            $qtdAtual = $_SESSION['carrinho'][$id]['qtd'];
+
+            if ($qtdAtual > 1) {
+                // Se tiver mais de 1, apenas diminui
+                $_SESSION['carrinho'][$id]['qtd']--;
+            } else {
+                // Se tiver 1 e clicar em menos, você quer remover?
+                // Opção A: Não faz nada (fica em 1) - Vamos usar esta.
+                // Opção B: Remove o item.
+            }
+        }
+        header('Location: ' . BASE_URL . '/carrinho');
+        exit;
+    }
+
     public function remover($id)
     {
         if (isset($_SESSION['carrinho'][$id])) {
