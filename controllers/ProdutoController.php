@@ -159,4 +159,79 @@ class ProdutoController {
         $this->produto->excluir($id);
         header('Location: ' . BASE_URL . '/admin/produtos');
     }
+
+    // =================================================================
+    // ÁREA ADMINISTRATIVA (NOVO E EDITAR)
+    // =================================================================
+
+    /**
+     * Tela de Novo Produto (Admin)
+     * URL: /produto/novo
+     */
+    public function novo() {
+        // 1. Segurança: Só admin entra
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        if (empty($_SESSION['usuario']['tipo']) || $_SESSION['usuario']['tipo'] !== 'admin') {
+            header('Location: ' . BASE_URL . '/home'); 
+            exit;
+        }
+        
+        // 2. Busca categorias para o <select>
+        $categorias = $this->categoria->listar();
+
+        // 3. Renderiza formulário vazio
+        render('admin/formulario_produto', [
+            'titulo' => 'Novo Produto',
+            'categorias' => $categorias,
+            'produto' => null 
+        ]);
+    }
+
+    /**
+     * Tela de Editar Produto (Admin)
+     * URL: /produto/editar/1
+     */
+    public function editar($id) {
+        // 1. Segurança
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        if (empty($_SESSION['usuario']['tipo']) || $_SESSION['usuario']['tipo'] !== 'admin') {
+            header('Location: ' . BASE_URL . '/home'); 
+            exit;
+        }
+
+        // 2. Busca o produto
+        $produto = $this->produto->getDado($id);
+
+        if (!$produto) {
+            echo "<script>alert('Produto não encontrado.'); location.href='".BASE_URL."/admin/produtos';</script>";
+            exit;
+        }
+
+        // 3. Tratamento do Preço (Visual)
+        // O banco tem 1000.50 -> O formulário quer 1.000,50
+        $produto->preco = number_format($produto->preco, 2, ',', '.');
+
+        // 4. Tratamento de Imagem e ID (Para não dar erro na View)
+        $idProd = $produto->id ?? $produto->id_produto;
+        $produto->id = $idProd;
+
+        $nomeArquivo = !empty($produto->imagem) ? $produto->imagem : "{$idProd}.jpg";
+        $imgPath = BASE_PATH . "/public/img/produtos/" . $nomeArquivo;
+        
+        if (file_exists($imgPath)) {
+            $produto->img = BASE_URL . "/img/produtos/" . $nomeArquivo;
+        } else {
+            $produto->img = null;
+        }
+
+        // 5. Busca categorias
+        $categorias = $this->categoria->listar();
+
+        // 6. Renderiza
+        render('admin/formulario_produto', [
+            'titulo' => 'Editar Produto',
+            'categorias' => $categorias,
+            'produto' => $produto
+        ]);
+    }
 }
