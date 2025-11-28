@@ -7,13 +7,6 @@
 
 Um sistema de e-commerce completo e robusto desenvolvido em **PHP Puro (Sem Frameworks)**, utilizando a arquitetura **MVC (Model-View-Controller)**. O projeto simula uma loja de autopeças com funcionalidades avançadas de gestão de estoque, carrinho de compras persistente e painel administrativo com indicadores de BI.
 
----
-
-## 📸 Screenshots
-
-*(Adicione aqui prints do seu projeto. Ex: Home, Carrinho, Dashboard)*
-
----
 
 ## 🚀 Funcionalidades
 
