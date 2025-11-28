@@ -1,13 +1,14 @@
 <?php
 
-class PedidoController {
+class PedidoController
+{
 
     private $pedidoModel;
 
-    public function __construct() {
-        // 1. Segurança: Só logado pode ver pedidos
+    public function __construct()
+    {
         if (session_status() === PHP_SESSION_NONE) session_start();
-        
+
         if (!isset($_SESSION['usuario'])) {
             header('Location: ' . BASE_URL . '/index');
             exit;
@@ -17,8 +18,8 @@ class PedidoController {
         $this->pedidoModel = new Pedido($pdo);
     }
 
-    // Lista todos os pedidos (Meus Pedidos)
-    public function listar() {
+    public function listar()
+    {
         $idUsuario = $_SESSION['usuario']['id'];
         $pedidos = $this->pedidoModel->listarPorUsuario($idUsuario);
 
@@ -28,12 +29,10 @@ class PedidoController {
         ]);
     }
 
-    // Ver detalhes de um pedido específico
-    // URL: /pedido/detalhes/5
-    public function detalhes($idPedido) {
-        // Busca itens
+    public function detalhes($idPedido)
+    {
         $itens = $this->pedidoModel->getItensDoPedido($idPedido);
-        
+
         render('pedido/detalhes', [
             'titulo' => 'Detalhes do Pedido #' . $idPedido,
             'itens' => $itens,

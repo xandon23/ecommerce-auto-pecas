@@ -32,12 +32,8 @@
                             $subtotal = $item->preco_unitario_na_compra * $item->quantidade;
                             $total += $subtotal;
 
-                            // Lógica simples para exibir imagem (mesma do carrinho)
-                            // Tenta usar o nome salvo, senão usa o ID
                             $nomeImg = !empty($item->imagem) ? $item->imagem : $item->id_produto . '.jpg';
                             $caminhoImg = BASE_URL . "/img/produtos/" . $nomeImg;
-                            // (Nota: em ambiente produtivo idealmente checaríamos file_exists, 
-                            // mas aqui assumimos que a imagem existe para simplificar a view)
                         ?>
                             <tr>
                                 <td class="p-3">

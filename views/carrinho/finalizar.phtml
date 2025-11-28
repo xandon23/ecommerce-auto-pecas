@@ -1,7 +1,7 @@
 <?php include BASE_PATH . '/views/partials/header.phtml'; ?>
 
 <div class="container my-5">
-    
+
     <div class="row mb-4">
         <div class="col-12">
             <h2 class="fw-bold">Finalizar Pedido</h2>
@@ -17,32 +17,32 @@
                 </div>
                 <ul class="list-group list-group-flush">
                     <?php foreach ($itens as $item): ?>
-                    <li class="list-group-item d-flex justify-content-between align-items-center py-3">
-                        <div class="d-flex align-items-center">
-                            <div style="width: 60px; height: 60px; flex-shrink: 0; background: #f8f9fa; border-radius: 6px; overflow: hidden; display: flex; align-items: center; justify-content: center; margin-right: 15px; border: 1px solid #eee;">
-                                <img src="<?= $item['img'] ?>" alt="" style="max-width: 100%; max-height: 100%;">
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                            <div class="d-flex align-items-center">
+                                <div style="width: 60px; height: 60px; flex-shrink: 0; background: #f8f9fa; border-radius: 6px; overflow: hidden; display: flex; align-items: center; justify-content: center; margin-right: 15px; border: 1px solid #eee;">
+                                    <img src="<?= $item['img'] ?>" alt="" style="max-width: 100%; max-height: 100%;">
+                                </div>
+
+                                <div>
+                                    <h6 class="mb-0 text-truncate" style="max-width: 250px;"><?= $item['nome'] ?></h6>
+                                    <small class="text-muted">
+                                        <?= $item['qtd'] ?>x R$ <?= number_format($item['preco'], 2, ',', '.') ?>
+                                    </small>
+                                </div>
                             </div>
-                            
-                            <div>
-                                <h6 class="mb-0 text-truncate" style="max-width: 250px;"><?= $item['nome'] ?></h6>
-                                <small class="text-muted">
-                                    <?= $item['qtd'] ?>x R$ <?= number_format($item['preco'], 2, ',', '.') ?>
-                                </small>
-                            </div>
-                        </div>
-                        <span class="fw-bold text-dark">
-                            R$ <?= number_format($item['preco'] * $item['qtd'], 2, ',', '.') ?>
-                        </span>
-                    </li>
+                            <span class="fw-bold text-dark">
+                                R$ <?= number_format($item['preco'] * $item['qtd'], 2, ',', '.') ?>
+                            </span>
+                        </li>
                     <?php endforeach; ?>
-                    
+
                     <li class="list-group-item bg-light d-flex justify-content-between align-items-center py-3">
                         <span class="h5 mb-0">Total a Pagar</span>
                         <span class="h4 mb-0 text-danger fw-bold">R$ <?= number_format($total, 2, ',', '.') ?></span>
                     </li>
                 </ul>
             </div>
-            
+
             <a href="<?= BASE_URL ?>/carrinho" class="btn btn-outline-secondary">
                 <i class="bi bi-arrow-left"></i> Voltar ao Carrinho
             </a>
@@ -52,9 +52,9 @@
             <div class="card shadow-sm border-0 bg-light">
                 <div class="card-body">
                     <h5 class="mb-3 fw-bold"><i class="bi bi-geo-alt-fill text-danger"></i> Entrega</h5>
-                    
+
                     <form action="<?= BASE_URL ?>/carrinho/confirmar" method="post">
-                        
+
                         <?php if (empty($enderecos)): ?>
                             <div class="alert alert-warning small border-warning">
                                 <i class="bi bi-exclamation-triangle-fill me-1"></i>
@@ -68,7 +68,7 @@
                                 <p class="small text-muted mb-2">Selecione o local de entrega:</p>
                                 <?php foreach ($enderecos as $k => $end): ?>
                                     <div class="form-check card p-2 mb-2 border-0 shadow-sm">
-                                        <input class="form-check-input ms-1 mt-2" type="radio" name="id_endereco" id="end<?= $end->id_endereco ?>" value="<?= $end->id_endereco ?>" <?= $k===0 ? 'checked' : '' ?>>
+                                        <input class="form-check-input ms-1 mt-2" type="radio" name="id_endereco" id="end<?= $end->id_endereco ?>" value="<?= $end->id_endereco ?>" <?= $k === 0 ? 'checked' : '' ?>>
                                         <label class="form-check-label small w-100 ps-2" for="end<?= $end->id_endereco ?>" style="cursor: pointer;">
                                             <strong><?= $end->rua ?>, <?= $end->numero ?></strong><br>
                                             <?= $end->bairro ?> - <?= $end->cidade ?>
@@ -79,7 +79,7 @@
                         <?php endif; ?>
 
                         <hr>
-                        
+
                         <div class="d-flex justify-content-between mb-3 small">
                             <span>Subtotal</span>
                             <span>R$ <?= number_format($total, 2, ',', '.') ?></span>
@@ -94,7 +94,7 @@
                                 Confirmar Compra <i class="bi bi-check-lg"></i>
                             </button>
                         </div>
-                        
+
                         <div class="text-center mt-3">
                             <small class="text-muted"><i class="bi bi-lock-fill"></i> Ambiente Seguro</small>
                         </div>

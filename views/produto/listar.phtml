@@ -1,7 +1,7 @@
 <?php include BASE_PATH . '/views/partials/header.phtml'; ?>
 
 <div class="container my-5">
-    
+
     <div class="row mb-4">
         <div class="col-12">
             <h2 class="fw-bold"><?= $titulo ?? 'Todos os Produtos' ?></h2>
@@ -13,13 +13,13 @@
         <?php if (!empty($produtos)): ?>
             <?php foreach ($produtos as $p): ?>
                 <div class="col-6 col-md-4 col-lg-3">
-                    
+
                     <div class="card card-product h-100 shadow-sm border-0">
-                        
+
                         <a href="<?= BASE_URL ?>/produto/index/<?= $p->id ?>">
                             <img src="<?= $p->img ?>" class="thumb card-img-top" alt="<?= htmlspecialchars($p->nome) ?>">
                         </a>
-                        
+
                         <div class="card-body d-flex flex-column">
                             <h6 class="card-title text-truncate" title="<?= htmlspecialchars($p->nome) ?>">
                                 <a href="<?= BASE_URL ?>/produto/index/<?= $p->id ?>" class="text-decoration-none text-dark">

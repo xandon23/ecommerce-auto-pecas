@@ -1,12 +1,14 @@
 <?php
-class Conexao {
+class Conexao
+{
     private static $host = "localhost";
     private static $user = "root";
     private static $db   = "ecommerce_projeto";
     private static $pass = "";
-    private static $pdo  = null; // conexão única (singleton)
+    private static $pdo  = null;
 
-    public static function getInstance() {
+    public static function getInstance()
+    {
         if (self::$pdo === null) {
             try {
                 self::$pdo = new PDO(
