@@ -1,30 +1,34 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $titulo ?? 'Dashboard Admin' ?></title>
-    
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<?= BASE_URL ?>/css/style.css">
-    
+
     <style>
-        /* Ajustes específicos para o Admin */
-        body { overflow: hidden; /* Remove scroll da página para o iframe ocupar tudo */ }
+        body {
+            overflow: hidden;
+        }
+
         .admin-header {
-            background-color: var(--main-color); /* Azul padrão */
+            background-color: var(--main-color);
             height: 70px;
             display: flex;
             align-items: center;
             padding: 0 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
+
 <body>
 
     <div class="admin-header justify-content-between">
-        
+
         <div class="d-flex align-items-center gap-3">
             <img src="<?= BASE_URL ?>/img/logodino.png" alt="Logo" style="height: 40px; width: auto;">
             <div class="vr text-white opacity-50"></div>
@@ -50,10 +54,10 @@
             frameborder="0"
             width="100%"
             height="100%"
-            allowtransparency
-        ></iframe>
+            allowtransparency></iframe>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

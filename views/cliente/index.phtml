@@ -10,7 +10,7 @@
 
     <div class="row">
         <div class="col-md-4 mb-4">
-            
+
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-white fw-bold">
                     <i class="bi bi-person-circle"></i> Meus Dados
@@ -27,7 +27,7 @@
                 </div>
                 <div class="card-body">
                     <form action="<?= BASE_URL ?>/cliente/alterarSenha" method="post">
-                        
+
                         <div class="mb-3">
                             <label class="form-label small">Senha Atual</label>
                             <div class="input-group">
@@ -91,7 +91,7 @@
                                     <div>
                                         <div class="fw-bold">
                                             <?= $end->rua ?>, <?= $end->numero ?>
-                                            <?php if(!empty($end->bairro)): ?>
+                                            <?php if (!empty($end->bairro)): ?>
                                                 - <?= $end->bairro ?>
                                             <?php endif; ?>
                                         </div>
@@ -101,9 +101,9 @@
                                         <div class="small text-muted">CEP: <?= $end->cep ?></div>
                                     </div>
                                     <div>
-                                        <a href="<?= BASE_URL ?>/cliente/excluirEndereco/<?= $end->id_endereco ?>" 
-                                           class="btn btn-sm btn-outline-danger" 
-                                           onclick="return confirm('Tem certeza que deseja excluir este endereço?')">
+                                        <a href="<?= BASE_URL ?>/cliente/excluirEndereco/<?= $end->id_endereco ?>"
+                                            class="btn btn-sm btn-outline-danger"
+                                            onclick="return confirm('Tem certeza que deseja excluir este endereço?')">
                                             <i class="bi bi-trash"></i>
                                         </a>
                                     </div>
